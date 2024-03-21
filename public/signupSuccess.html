@@ -1,0 +1,52 @@
+<!-- signupSuccess.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Success</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    div {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h2>Signup Successful!</h2>
+    <p>Your secret key is:</p>
+    <p id="secretKey"></p>
+    <a href="/login">Go to Login</a>
+  </div>
+
+  <script>
+    // Retrieve the secret key from the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const secretKey = urlParams.get('secretKey');
+
+    // Display the secret key on the page
+    document.getElementById('secretKey').textContent = secretKey;
+  </script>
+</body>
+</html>

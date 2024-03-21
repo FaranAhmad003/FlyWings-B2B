@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Create Ticket</title>
+  <!-- Add any additional styles or links here -->
+</head>
+<body>
+  <h2>Create Ticket</h2>
+  <form id="createTicketForm">
+    <input type="date" id="dateOfTicket" name="dateOfTicket" required>
+    <input type="time" id="time" name="time" required>
+    <input type="text" id="luggageCapacity" name="luggageCapacity" placeholder="Luggage Capacity" required>
+    <select id="meal" name="meal">
+      <option value="YES">Yes</option>
+      <option value="NO">No</option>
+    </select>
+    <input type="number" id="fare" name="fare" placeholder="Fare" required>
+    <button type="button" onclick="submitTicket()">Submit Ticket</button>
+  </form>
+  
+  <script>
+    function submitTicket() {
+      // Collect form data
+      const ticketData = {
+        dateOfTicket: document.getElementById('dateOfTicket').value,
+        time: document.getElementById('time').value,
+        luggageCapacity: document.getElementById('luggageCapacity').value,
+        meal: document.getElementById('meal').value,
+        fare: document.getElementById('fare').value,
+      };
+      
+      // Send ticket data to server
+      fetch('/createTicket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticketData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Handle response
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>

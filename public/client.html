@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client - Select Ticket</title>
+  <style>
+    /* Style for the ticket container */
+    #tickets {
+      display: flex;
+      flex-wrap: wrap; /* Allows tickets to wrap to the next line if the container is not wide enough */
+      gap: 10px; /* Adds some space between the tickets */
+    }
+    /* Style for each ticket */
+    .ticket {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select Ticket</h2>
+  <div id="tickets"></div> <!-- Container for tickets -->
+
+  <!-- Socket.IO client library and the script to handle tickets -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('ticketCreated', (ticket) => {
+      // Assuming `ticket` contains all the relevant information
+      const ticketsDiv = document.getElementById('tickets');
+      const ticketDiv = document.createElement('div');
+      ticketDiv.classList.add('ticket'); // Apply the 'ticket' class for styling
+      ticketDiv.innerHTML = `
+        <p>Date: ${ticket.dateOfTicket}</p>
+        <p>Time: ${ticket.time}</p>
+        <p>Luggage Capacity: ${ticket.luggageCapacity}</p>
+        <p>Meal: ${ticket.meal}</p>
+        <p>Fare: ${ticket.fare}</p>
+        <button onclick="selectTicket('${ticket.id}')">Select</button>
+      `;
+      ticketsDiv.appendChild(ticketDiv);
+    });
+
+    function selectTicket(ticketId) {
+      // Send selection to server or handle accordingly
+      console.log('Ticket selected:', ticketId);
+      // Here you can emit a socket event to the server or make an API call to register the ticket selection
+    }
+  </script>
+</body>
+</html>
