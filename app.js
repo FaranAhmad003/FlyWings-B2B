@@ -109,7 +109,7 @@ app.get(
   (req, res) => {
     const username = getUsername(); // Replace this with your actual logic to get the username
     const adminHtml = fs.readFileSync(
-      __dirname + "/public/client.html",
+      __dirname + "/public/client_home_page.html",
       "utf8"
     );
     const updatedHtml = adminHtml.replace("<%= username %>", username);
@@ -119,7 +119,7 @@ app.get(
 
 app.get("/admin", (req, res) => {
   const username = getUsername(); // Replace this with your actual logic to get the username
-  const adminHtml = fs.readFileSync(__dirname + "/public/admin.html", "utf8");
+  const adminHtml = fs.readFileSync(__dirname + "/admin/admin_home_page.html", "utf8");
   const updatedHtml = adminHtml.replace("<%= username %>", username);
   res.send(updatedHtml);
 });
@@ -278,50 +278,103 @@ app.post("/login", (req, res) => {
 
 
 //=============admin side functionallity to handle here
-app.post("/createTicket", (req, res) => {
-  const { dateOfTicket, time, luggageCapacity, meal, fare } = req.body;
 
-  // Assuming you have a 'tickets' table with columns corresponding to the ticket details
-  connection.query(
-    "INSERT INTO tickets (date_of_ticket, time, luggage_capacity, meal, fare) VALUES (?, ?, ?, ?, ?)",
-    [dateOfTicket, time, luggageCapacity, meal, fare],
-    (err, results) => {
-      if (err) {
-        console.error("Error inserting ticket:", err);
-        res.status(500).json({ error: "Internal Server Error" });
-      } else {
-        console.log("Ticket created:", results);
-
-        // Emit the newly created ticket data to all connected clients
-        const ticketData = {
-          dateOfTicket,
-          time,
-          luggageCapacity,
-          meal,
-          fare,
-          id: results.insertId,
-        };
-        io.emit("ticketCreated", ticketData);
-
-        res.json({ message: "Ticket created successfully!", ticketData });
-      }
-    }
-  );
-});
 
 
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  // Broadcast ticket creation to all clients
-  socket.on("createTicket", (ticket) => {
-    io.emit("ticketCreated", ticket);
+  // Fetch all tickets from the database
+  connection.query("SELECT * FROM tickets", (err, results) => {
+    if (err) {
+      console.error("Error fetching tickets:", err);
+      // Handle error (e.g., notify the client of the failure)
+    } else {
+      // Send all tickets to the newly connected client
+      socket.emit("allTickets", results);
+app.post("/createTicket", (req, res) => {
+  const {
+    dateOfTicket,
+    time,
+    luggageCapacity,
+    meal,
+    fare,
+    fromLocation,
+    toLocation,
+    bookedByUsername,
+    flightNumber,
+    paymentStatus,
+    tripType,
+    returnDate,
+    returnTime,
+  } = req.body;
+
+  // Insert into tickets table
+  connection.query(
+    "INSERT INTO tickets (date_of_ticket, time, luggage_capacity, meal, fare, from_location, to_location, booked_by_username, flight_number, payment_status, trip_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      dateOfTicket,
+      time,
+      luggageCapacity,
+      meal,
+      fare,
+      fromLocation,
+      toLocation,
+      bookedByUsername,
+      flightNumber,
+      paymentStatus,
+      tripType,
+    ],
+    (err, results) => {
+      if (err) {
+        console.error("Error inserting ticket:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+        return;
+      }
+      console.log("Ticket created:", results);
+
+      // If it's a return ticket, insert into return_tickets table
+      if (tripType === "RETURN" && returnDate && returnTime) {
+        connection.query(
+          "INSERT INTO return_tickets (ticket_id, return_date, return_time) VALUES (?, ?, ?)",
+          [results.insertId, returnDate, returnTime],
+          (err, returnResults) => {
+            if (err) {
+              console.error("Error inserting return ticket details:", err);
+              // Optionally handle rollback or inconsistency
+            } else {
+              console.log("Return ticket details inserted:", returnResults);
+            }
+          }
+        );
+      }
+
+      // Emit the newly created ticket data to all connected clients
+      const ticketData = {
+        dateOfTicket,
+        time,
+        luggageCapacity,
+        meal,
+        fare,
+        fromLocation,
+        toLocation,
+        bookedByUsername,
+        flightNumber,
+        paymentStatus,
+        tripType,
+        returnDate: tripType === "RETURN" ? returnDate : null,
+        returnTime: tripType === "RETURN" ? returnTime : null,
+        id: results.insertId,
+      };
+      io.emit("ticketCreated", ticketData);
+
+      res.json({ message: "Ticket created successfully!", ticketData });
+    }
+  );
+});
+    }
   });
 });
-
-
-
-
 
 // Start the server
 server.listen(port, () => {

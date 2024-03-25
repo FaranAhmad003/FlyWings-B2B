@@ -5,22 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Client - Select Ticket</title>
   <style>
-    /* Style for the ticket container */
-    #tickets {
-      display: flex;
-      flex-direction: column; /* Arrange tickets vertically */
-      flex-wrap: wrap; /* Allows tickets to wrap to the next line if the container is not wide enough */
-      gap: 10px; /* Adds some space between the tickets */
-      align-items: flex-start; /* Align tickets at the start of the container */
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
-    /* Style for each ticket */
-    .ticket {
+    th, td {
       border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: #f9f9f9; /* Light background for the tickets */
+      padding: 8px;
+      text-align: left;
     }
-    /* Button style */
+    th {
+      background-color: #f2f2f2;
+    }
     button {
       cursor: pointer;
       padding: 5px 10px;
@@ -36,7 +32,21 @@
 </head>
 <body>
   <h2>Select Ticket</h2>
-  <div id="tickets"></div> <!-- Container for tickets -->
+  <table id="ticketsTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Luggage Capacity</th>
+        <th>Meal</th>
+        <th>Fare</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Tickets will be inserted here -->
+    </tbody>
+  </table>
 
   <!-- Socket.IO client library and the script to handle tickets -->
   <script src="/socket.io/socket.io.js"></script>
@@ -44,25 +54,22 @@
     const socket = io();
 
     socket.on('ticketCreated', (ticket) => {
-      console.log('New ticket received:', ticket);
-      const ticketsDiv = document.getElementById('tickets');
-      const ticketDiv = document.createElement('div');
-      ticketDiv.classList.add('ticket'); // Apply the 'ticket' class for styling
-      ticketDiv.innerHTML = `
-        <p>Date: ${ticket.dateOfTicket}</p>
-        <p>Time: ${ticket.time}</p>
-        <p>Luggage Capacity: ${ticket.luggageCapacity}</p>
-        <p>Meal: ${ticket.meal}</p>
-        <p>Fare: $${ticket.fare}</p>
-        <button onclick="selectTicket('${ticket.id}')">Select</button>
+      const ticketsTableBody = document.querySelector('#ticketsTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${ticket.dateOfTicket}</td>
+        <td>${ticket.time}</td>
+        <td>${ticket.luggageCapacity}</td>
+        <td>${ticket.meal}</td>
+        <td>$${ticket.fare}</td>
+        <td><button onclick="selectTicket('${ticket.id}')">Select</button></td>
       `;
-      ticketsDiv.appendChild(ticketDiv);
+      ticketsTableBody.appendChild(row);
     });
 
     function selectTicket(ticketId) {
       console.log('Ticket selected:', ticketId);
       // Implement the functionality to handle ticket selection
-      // This could involve sending the ticketId back to the server or redirecting the user
     }
   </script>
 </body>

@@ -1,53 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Create Ticket</title>
-  <!-- Add any additional styles or links here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Create Ticket</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .hidden {
+            display: none;
+        }        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 20px;
+        }
+
+        /* Style for the non-clickable admin panel label */
+        .navbar .admin-panel {
+            color: #fff;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+
+        /* Style for the navigation links */
+        .navbar a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* Change link color on hover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
 </head>
 <body>
-  <h2>Create Ticket</h2>
-  <form id="createTicketForm">
-    <input type="date" id="dateOfTicket" name="dateOfTicket" required>
-    <input type="time" id="time" name="time" required>
-    <input type="text" id="luggageCapacity" name="luggageCapacity" placeholder="Luggage Capacity" required>
-    <select id="meal" name="meal">
-      <option value="YES">Yes</option>
-      <option value="NO">No</option>
-    </select>
-    <input type="number" id="fare" name="fare" placeholder="Fare" required>
-    <button type="button" onclick="submitTicket()">Submit Ticket</button>
-  </form>
-  
-  <script>
-    function submitTicket() {
-      // Collect form data
-      const ticketData = {
-        dateOfTicket: document.getElementById('dateOfTicket').value,
-        time: document.getElementById('time').value,
-        luggageCapacity: document.getElementById('luggageCapacity').value,
-        meal: document.getElementById('meal').value,
-        fare: document.getElementById('fare').value,
-      };
-      
-      // Send ticket data to server
-      fetch('/createTicket', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ticketData),
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        // Handle response
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    }
-  </script>
+    <div class="navbar">
+        <div class="admin-panel">Admin Panel</div>
+        <a href="/new-booking">New Booking</a>
+        <a href="/my-booking">My Booking</a>
+        <a href="/banks">Banks</a>
+        <a href="/my-ledger">My Ledger</a>
+        <a href="/give-feedback">Give Feedback</a>
+    </div>
+    
+    <form id="createTicketForm">
+        <table>
+            <tr>
+                <th>Date of Ticket</th>
+                <td><input type="date" id="dateOfTicket" name="dateOfTicket" required></td>
+            </tr>
+            <tr>
+                <th>Time</th>
+                <td><input type="time" id="time" name="time" required></td>
+            </tr>
+            <tr>
+                <th>Luggage Capacity</th>
+                <td><input type="text" id="luggageCapacity" name="luggageCapacity" placeholder="Luggage Capacity" required></td>
+            </tr>
+            <tr>
+                <th>Meal</th>
+                <td>
+                    <select id="meal" name="meal">
+                        <option value="YES">Yes</option>
+                        <option value="NO">No</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Fare</th>
+                <td><input type="number" id="fare" name="fare" placeholder="Fare" required></td>
+            </tr>
+            <tr>
+                <th>From Location</th>
+                <td><input type="text" id="fromLocation" name="fromLocation" placeholder="From Location" required></td>
+            </tr>
+            <tr>
+                <th>To Location</th>
+                <td><input type="text" id="toLocation" name="toLocation" placeholder="To Location" required></td>
+            </tr>
+            <tr>
+                <th>Booked By Username</th>
+                <td><input type="text" id="bookedByUsername" name="bookedByUsername" placeholder="Booked By Username" required></td>
+            </tr>
+            <tr>
+                <th>Flight Number</th>
+                <td><input type="text" id="flightNumber" name="flightNumber" placeholder="Flight Number" required></td>
+            </tr>
+            <tr>
+                <th>Payment Status</th>
+                <td>
+                    <select id="paymentStatus" name="paymentStatus">
+                        <option value="PAID">Paid</option>
+                        <option value="UNPAID">Unpaid</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Trip Type</th>
+                <td>
+                    <select id="tripType" name="tripType" onchange="toggleReturnFields()">
+                        <option value="ONE_WAY">One Way</option>
+                        <option value="RETURN">Return</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="hidden" id="returnDateRow">
+                <th>Return Date</th>
+                <td><input type="date" id="returnDate" name="returnDate"></td>
+            </tr>
+            <tr class="hidden" id="returnTimeRow">
+                <th>Return Time</th>
+                <td><input type="time" id="returnTime" name="returnTime"></td>
+            </tr>
+        </table>
+        <button type="button" onclick="submitTicket()">Submit Ticket</button>
+    </form>
+
+    <script>
+        function toggleReturnFields() {
+            const tripType = document.getElementById('tripType').value;
+            const returnDateRow = document.getElementById('returnDateRow');
+            const returnTimeRow = document.getElementById('returnTimeRow');
+            if (tripType === 'RETURN') {
+                returnDateRow.classList.remove('hidden');
+                returnTimeRow.classList.remove('hidden');
+            } else {
+                returnDateRow.classList.add('hidden');
+                returnTimeRow.classList.add('hidden');
+            }
+        }
+
+        function submitTicket() {
+            // Collect form data including checking if return fields are displayed
+            const tripType = document.getElementById('tripType').value;
+            const ticketData = {
+                dateOfTicket: document.getElementById('dateOfTicket').value,
+                time: document.getElementById('time').value,
+                luggageCapacity: document.getElementById('luggageCapacity').value,
+                meal: document.getElementById('meal').value,
+                fare: document.getElementById('fare').value,
+                fromLocation: document.getElementById('fromLocation').value,
+                toLocation: document.getElementById('toLocation').value,
+                bookedByUsername: document.getElementById('bookedByUsername').value,
+                flightNumber: document.getElementById('flightNumber').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                tripType: tripType,
+                returnDate: tripType === 'RETURN' ? document.getElementById('returnDate').value : null,
+                returnTime: tripType === 'RETURN' ? document.getElementById('returnTime').value : null
+            };
+            
+            fetch('/createTicket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ticketData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('Ticket created successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to create ticket.');
+            });
+        }
+
+        // Ensure return fields are shown/hidden correctly on initial load
+        document.addEventListener('DOMContentLoaded', toggleReturnFields);
+    </script>
 </body>
 </html>
