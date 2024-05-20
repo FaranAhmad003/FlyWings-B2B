@@ -928,6 +928,86 @@ app.post("/api/editPassenger/:passengerId", (req, res) => {
 });
 
 
+app.get("/api/getPassengerDetails", (req, res) => {
+  const passengerId = req.query.passenger_id;
+
+  const sql = `
+    SELECT 
+        p.id as passenger_id,
+        p.surname,
+        p.given_name,
+        p.passport_number,
+        p.pnr as passenger_pnr,
+        t.date_of_ticket,
+        t.deptTime,
+        t.luggage_capacity,
+        t.meal,
+        t.from_location,
+        t.to_location,
+        t.flight_number,
+        t.arrivalTime,
+        t.airline,
+        u.first_name as agent_first_name,
+        u.last_name as agent_last_name,
+        u.phone_no as agent_phone
+    FROM 
+        passengers p
+    JOIN 
+        tickets t ON p.ticket_id = t.id
+    JOIN 
+        user u ON p.user_id = u.id
+    WHERE 
+        p.id = ?
+  `;
+
+  connection.query(sql, [passengerId], (err, result) => {
+    if (err) throw err;
+
+    if (result.length === 0) {
+      return res.status(404).send("Passenger not found");
+    }
+
+    const passenger = result[0];
+    res.json(passenger);
+  });
+});
+
+app.get("/print-ticket", async (req, res) => {
+  const passengerId = req.query.passenger_id;
+
+  // Your Puppeteer code to generate and print the ticket
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const content = fs.readFileSync(
+      path.join(__dirname, "printingTicket.html"),
+      "utf8"
+    );
+
+    await page.setContent(content);
+    await page.emulateMediaType("screen");
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "20px",
+        right: "20px",
+        bottom: "20px",
+        left: "20px",
+      },
+    });
+
+    await browser.close();
+
+    // Send the PDF buffer as response
+    res.contentType("application/pdf");
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).send("Error generating PDF");
+  }
+});
+
 // Start the server
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

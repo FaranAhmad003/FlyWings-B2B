@@ -8,15 +8,17 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f7f7f7;
       margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      background-image: url('/assets/login.jpeg');
+      background-size: cover;
+      background-position: center;
     }
     form {
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.8); /* Add opacity to the form */
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -82,6 +84,39 @@
       margin-top: 10px;
       font-weight: 500;
     }
+
+    /* Media queries for responsiveness */
+    @media (max-width: 768px) {
+      form {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      form {
+        padding: 20px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      label {
+        font-size: 14px;
+      }
+      input {
+        width: calc(100% - 20px);
+        padding: 8px;
+        margin-bottom: 15px;
+      }
+      button {
+        padding: 10px 0;
+        font-size: 16px;
+      }
+      .signup-link,
+      .forgot-password-link {
+        margin-top: 15px;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -104,42 +139,40 @@
     </div>
 
     <div id="errorMessage" class="error-message"></div>
-
   </form>
-<script>
-  function submitForm() {
-    const formData = {
-      username: document.getElementById('username').value,
-      password: document.getElementById('password').value
-    };
+  <script>
+    function submitForm() {
+      const formData = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+      };
 
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Check userType and redirect accordingly
-        if (data.userType === 'admin') {
-          window.location.href = '/admin';
-        } else if (data.userType === 'client') {
-          window.location.href = `/client?userId=${data.userId}`;
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Check userType and redirect accordingly
+          if (data.userType === 'admin') {
+            window.location.href = '/admin';
+          } else if (data.userType === 'client') {
+            window.location.href = `/client?userId=${data.userId}`;
+          }
+        } else {
+          document.getElementById('errorMessage').textContent = 'Invalid username or password';
+          document.getElementById('username').style.borderColor = '#e74c3c';
+          document.getElementById('password').style.borderColor = '#e74c3c';
         }
-      } else {
-        document.getElementById('errorMessage').textContent = 'Invalid username or password';
-        document.getElementById('username').style.borderColor = '#e74c3c';
-        document.getElementById('password').style.borderColor = '#e74c3c';
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  }
-</script>
-
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
 </body>
 </html>

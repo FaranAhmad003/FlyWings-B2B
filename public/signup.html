@@ -188,7 +188,7 @@
         console.log(data);
         if (data.message === 'Signup successful!' && data.secretKey) {
           // Redirect to signupSuccess.html with the secretKey in the URL
-          window.location.href = `/signupSuccess?secretKey=${encodeURIComponent(data.secretKey)}`;
+          window.location.href = `/login`;
         } else if (data.error) {
           // Display error messages
           if (data.errorFields) {

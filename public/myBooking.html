@@ -390,7 +390,6 @@ let passengerIdToProcess;
             const formattedDate = `${day}-${month}-${year}`;
             const dataRow = document.createElement('tr');
             dataRow.setAttribute('id', `row_${passenger.passenger_id}`);
-
 dataRow.innerHTML = 
     `<td scope="row">${passenger.passenger_id}</td>
     <td>036501</td>
@@ -405,15 +404,19 @@ dataRow.innerHTML =
         <span><span class="badge badge-primary">${passenger.passenger_status}</span></span> <br> 
         <span style="color: darkred;">Booking ${passenger.passenger_status}</span>
     </td>
-   <td>
-    ${(passenger.passenger_status !== 'approved' && passenger.passenger_status !== 'rejected' && passenger.passenger_status !== 'cancelled') ? 
-    `<button type="button" onclick="window.location.href='/public/editPassenger.html?passenger_id=${passenger.passenger_id}'">
-        <img src="/images/edit.png" alt="Edit Icon" width="16" height="16">
-    </button>` 
-    : ''}
-</td>
+    <td>
+        ${(passenger.passenger_status !== 'approved' && passenger.passenger_status !== 'rejected' && passenger.passenger_status !== 'cancelled') ? 
+        `<button type="button" onclick="window.location.href='/public/editPassenger.html?passenger_id=${passenger.passenger_id}'">
+            <img src="/images/edit.png" alt="Edit Icon" width="16" height="16">
+        </button>` 
+        : ''}
+        ${(passenger.passenger_status === 'approved') ? 
+        `<button type="button" onclick="window.location.href='/public/printingTicket.html?passenger_id=${passenger.passenger_id}'">
+            <img src="/images/printing.png" alt="Print Icon" width="16" height="16">
+        </button>` 
+        : ''}
+    </td>`;
 
-    </tr>`;
 
 
 

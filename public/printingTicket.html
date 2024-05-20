@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Ticket Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #008000;
+        }
+        .ticket-info, .flight-info, .passenger-info, .terms {
+            margin-bottom: 20px;
+        }
+        .ticket-info {
+            background-color: #008000;
+            color: white;
+            padding: 10px;
+        }
+        .ticket-info div {
+            margin-bottom: 5px;
+        }
+        .flight-info {
+            background-color: #f0ad4e;
+            color: white;
+            padding: 10px;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .terms {
+            text-align: center;
+            color: #008000;
+        }
+        .terms p {
+            margin: 5px 0;
+        }
+        /* Additional styles for the print button */
+        #printButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #printButton:hover {
+            background-color: #005700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Electronic Ticket Reservation</h1>
+        </div>
+        <div class="ticket-info" id="ticket-info">
+            <div>Booking Reference Number (PNR): <span id="pnr"></span></div>
+            <div>Booking ID: <span id="booking-id"></span></div>
+            <div>Issued By: FLY WINGS INTERNATIONAL</div>
+            <div>Agent Name: <span id="agent-name"></span></div>
+            <div>Contact: <span id="agent-phone"></span></div>
+        </div>
+        <div class="flight-info" id="flight-info">
+            <div>Flight 1 - <span id="from-location"></span> to <span id="to-location"></span></div>
+        </div>
+        <div class="details">
+            <div>
+                <div>AIRLINE</div>
+                <div id="airline"></div>
+            </div>
+            <div>
+                <div>FLIGHT #</div>
+                <div id="flight-number"></div>
+            </div>
+            <div>
+                <div>DEPARTURE</div>
+                <div id="departure-time"></div>
+                <div id="departure-location"></div>
+                <div id="departure-date"></div>
+            </div>
+            <div>
+                <div>ARRIVAL</div>
+                <div id="arrival-time"></div>
+                <div id="arrival-location"></div>
+                <div id="arrival-date"></div>
+            </div>
+            <div>
+                <div>Baggage</div>
+                <div id="baggage"></div>
+            </div>
+            <div>
+                <div>Meal</div>
+                <div id="meal"></div>
+            </div>
+        </div>
+        <div class="details">
+            <div>
+                <div>Sr #</div>
+                <div>1</div>
+            </div>
+            <div>
+                <div>Passenger Name</div>
+                <div id="passenger-name"></div>
+            </div>
+            <div>
+                <div>Passport #</div>
+                <div id="passport-number"></div>
+            </div>
+        </div>
+        <div class="terms">
+            <p>Terms & Conditions</p>
+            <p>1- PASSENGER SHOULD REPORT AT CHECK-IN COUNTER AT LEAST 04:00 HOURS PRIOR TO FLIGHT.</p>
+            <p>2- TICKETS ARE NON-REFUNDABLE AND NON-CHANGEABLE ANY TIME.</p>
+        </div>
+        <!-- Print button -->
+        <button id="printButton">Print Ticket</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the passenger_id from the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const passengerId = urlParams.get('passenger_id');
+            
+            if (passengerId) {
+                // Fetch passenger details from the server
+                fetch(`/api/getPassengerDetails?passenger_id=${passengerId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the HTML with the fetched data
+                        document.getElementById('pnr').innerText = data.passenger_pnr;
+                        document.getElementById('booking-id').innerText = data.passenger_id;
+                        document.getElementById('from-location').innerText = data.from_location;
+                        document.getElementById('to-location').innerText = data.to_location;
+                        document.getElementById('airline').innerText = data.airline;
+                        document.getElementById('flight-number').innerText = data.flight_number;
+                        document.getElementById('departure-time').innerText = data.deptTime;
+                        document.getElementById('departure-location').innerText = data.from_location;
+                        document.getElementById('departure-date').innerText = data.date_of_ticket;
+                        document.getElementById('arrival-time').innerText = data.arrivalTime;
+                        document.getElementById('arrival-location').innerText = data.to_location;
+                        document.getElementById('arrival-date').innerText = data.arrivalTime;
+                        document.getElementById('baggage').innerText = data.luggage_capacity;
+                        document.getElementById('meal').innerText = data.meal;
+                        document.getElementById('passenger-name').innerText = `${data.given_name} ${data.surname}`;
+                        document.getElementById('passport-number').innerText = data.passport_number;
+                        document.getElementById('agent-name').innerText = `${data.agent_first_name} ${data.agent_last_name}`;
+                        document.getElementById('agent-phone').innerText = data.agent_phone;
+                    })
+                    .catch(error => console.error('Error fetching passenger details:', error));
+            } else {
+                console.error('No passenger_id provided in the URL parameters');
+            }
+
+            // Print button functionality
+            document.getElementById("printButton").addEventListener("click", function() {
+                window.print(); // Trigger print dialog
+            });
+        });
+    </script>
+</body>
+</html>
