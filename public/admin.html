@@ -5,68 +5,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Create Ticket</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-panel {
+            color: #fff;
+            font-size: 24px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
-        td, th {
+
+        th, td {
             border: 1px solid #ddd;
-            padding: 8px;
-        }
-        .hidden {
-            display: none;
-        }        .navbar {
-            display: flex;
-            align-items: center;
-            background-color: #333;
-            padding: 10px 20px;
+            padding: 12px;
+            text-align: left;
         }
 
-        /* Style for the non-clickable admin panel label */
-        .navbar .admin-panel {
-            color: #fff;
-            margin-right: 20px;
-            font-size: 20px;
+        th {
+            background-color: #f2f2f2;
         }
 
-        /* Style for the navigation links */
-        .navbar a {
+        input[type="date"],
+        input[type="time"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
             color: white;
-            padding: 10px 15px;
-            text-decoration: none;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
             font-size: 18px;
+            transition: background-color 0.3s ease;
         }
 
-        /* Change link color on hover */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="navbar">
         <div class="admin-panel">Admin Panel</div>
-        <a href="/new-booking">New Booking</a>
-        <a href="/my-booking">My Booking</a>
-        <a href="/banks">Banks</a>
-        <a href="/my-ledger">My Ledger</a>
-        <a href="/give-feedback">Give Feedback</a>
     </div>
-    
+
     <form id="createTicketForm">
         <table>
             <tr>
-                <th>Date of Ticket</th>
-                <td><input type="date" id="dateOfTicket" name="dateOfTicket" required></td>
+                <th>Flight Number</th>
+                <td><input type="text" id="flightNumber" name="flightNumber" placeholder="Flight Number" required></td>
             </tr>
             <tr>
-                <th>Time</th>
+                <th>PNR Number</th>
+                <td><input type="text" id="pnr" name="pnr" placeholder="PNR #" required></td>
+            </tr>
+            <tr>
+            <tr>
+                <th>Date of Ticket</th>
+                <td><input type="date" id="date_of_ticket" name="date_of_ticket" required></td>
+            </tr>
+            <tr>
+                <th>No of Tickets</th>
+                <td><input type="number" id="bookedByUsername" name="bookedByUsername" placeholder="e.g 20" required></td>
+            </tr>
+            <tr>
+                <th>Airline</th>
+                <td>
+                    <select id="airline" name="airline">
+                        <option value="PIA">Pakistan International Airlines (PIA)</option>
+                        <option value="Airblue">Airblue</option>
+                        <option value="Serene Air">Serene Air</option>
+                        <option value="AirSial">AirSial</option>
+                        <option value="Fly Jinnah">Fly Jinnah</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Dept Time</th>
                 <td><input type="time" id="time" name="time" required></td>
             </tr>
             <tr>
+                <th>Arrival Time</th>
+                <td><input type="time" id="arrivalTime" name="arrivalTime" required></td>
+            </tr>
+            <tr>
                 <th>Luggage Capacity</th>
-                <td><input type="text" id="luggageCapacity" name="luggageCapacity" placeholder="Luggage Capacity" required></td>
+                <td><input type="text" id="luggage_capacity" name="luggage_capacity" placeholder="Luggage Capacity in KG" required></td>
+            </tr>
+            <tr>
+                <th>Fare</th>
+                <td><input type="number" id="fare" name="fare" placeholder="PKR" required></td>
+            </tr>
+            <tr>
+                <th>From Location</th>
+                <td>
+                    <select id="fromLocation" name="fromLocation" required>
+                        <option value="">Select a City (International Airport)</option>
+                        <option value="Karachi">Karachi</option>
+                        <option value="Islamabad">Islamabad</option>
+                        <option value="Lahore">Lahore</option>
+                        <option value="Peshawar">Peshawar</option>
+                        <option value="Multan">Multan</option>
+                        <option value="Sialkot">Sialkot</option>
+                        <option value="Faisalabad">Faisalabad</option>
+                        <option value="Quetta">Quetta</option>
+                        <option value="Gwadar">Gwadar</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>To Location</th>
+                <td>
+                    <select id="toLocation" name="toLocation" required>
+                        <option value="">Select a City</option>
+                        <option value="Dubai">Dubai (DXB & DWC)</option>
+                        <option value="Abu Dhabi">Abu Dhabi (AUH)</option>
+                        <option value="Sharjah">Sharjah (SHJ)</option>
+                        <option value="Ras al-Khaimah">Ras al-Khaimah (RAK)</option>
+                        <option value="Muscat">Muscat (MCT)</option>
+                        <!-- OMAN MASCAT -->
+                        <option value="Muscat">Muscat (MCT)</option>
+                        <option value="Salalah">Salalah (SLL)</option>
+                        <option value="Sohar">Sohar (OHS)</option>
+                        <option value="Duqm">Duqm (DQM)</option>
+                        <option value="Khasab">Khasab (KHS)</option>
+                        <option value="Musandam">Musandam (KHS, includes Khasab)</option>
+                        <option value="Nizwa">Nizwa</option>
+                        <option value="Sur">Sur (SUH)</option>
+                        <option value="Masirah">Masirah (MSH)</option>
+                        <option value="Buraimi">Buraimi</option>
+                        <option value="Ibri">Ibri</option>
+                        <option value="Rustaq">Rustaq</option>
+                        <option value="Thumrait">Thumrait (TTH)</option>
+                        <option value="Marmul">Marmul (OMM)</option>
+                        <option value="Fahud">Fahud (FAU)</option>
+                        <option value="Qarn Alam">Qarn Alam</option>
+                        <option value="Mukhaizna">Mukhaizna</option>
+                        <option value="Jaaluni">Jaaluni (DJU)</option>
+                        <option value="Adam">Adam (AOM)</option>
+                        <!-- saudia group -->
+                        <option value="Riyadh">Riyadh (RUH)</option>
+                        <option value="Jeddah">Jeddah (JED)</option>
+                        <option value="Dammam">Dammam (DMM)</option>
+                        <option value="Medina">Medina (MED)</option>
+                        <option value="Abha">Abha (AHB)</option>
+                        <option value="Tabuk">Tabuk (TUU)</option>
+                        <option value="Taif">Taif (TIF)</option>
+                        <option value="Qassim">Qassim (ELQ)</option>
+                        <option value="Yanbu">Yanbu (YNB)</option>
+                        <option value="Hail">Hail (HAS)</option>
+                        <!-- Add more options as needed for KSA group -->
+                        <!-- Add more options as needed -->
+                    </select>
+                </td> 
+            </tr>
+                <th>Payment Status</th>
+                <td>
+                    <select id="paymentStatus" name="paymentStatus">
+                        <option value="PAID">Paid</option>
+                        <option value="UNPAID">Unpaid</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <th>Meal</th>
@@ -74,35 +221,6 @@
                     <select id="meal" name="meal">
                         <option value="YES">Yes</option>
                         <option value="NO">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th>Fare</th>
-                <td><input type="number" id="fare" name="fare" placeholder="Fare" required></td>
-            </tr>
-            <tr>
-                <th>From Location</th>
-                <td><input type="text" id="fromLocation" name="fromLocation" placeholder="From Location" required></td>
-            </tr>
-            <tr>
-                <th>To Location</th>
-                <td><input type="text" id="toLocation" name="toLocation" placeholder="To Location" required></td>
-            </tr>
-            <tr>
-                <th>Booked By Username</th>
-                <td><input type="text" id="bookedByUsername" name="bookedByUsername" placeholder="Booked By Username" required></td>
-            </tr>
-            <tr>
-                <th>Flight Number</th>
-                <td><input type="text" id="flightNumber" name="flightNumber" placeholder="Flight Number" required></td>
-            </tr>
-            <tr>
-                <th>Payment Status</th>
-                <td>
-                    <select id="paymentStatus" name="paymentStatus">
-                        <option value="PAID">Paid</option>
-                        <option value="UNPAID">Unpaid</option>
                     </select>
                 </td>
             </tr>
@@ -128,6 +246,20 @@
     </form>
 
     <script>
+        window.onload = function() {
+            fetch('/usernames')
+                .then(response => response.json())
+                .then(usernames => {
+                const select = document.getElementById('bookedByUsername');
+                usernames.forEach(username => {
+                    const option = document.createElement('option');
+                    option.value = username;
+                    option.text = username;
+                    select.appendChild(option);
+                });
+                })
+                .catch(error => console.error('Error:', error));
+            };
         function toggleReturnFields() {
             const tripType = document.getElementById('tripType').value;
             const returnDateRow = document.getElementById('returnDateRow');
@@ -142,12 +274,13 @@
         }
 
         function submitTicket() {
-            // Collect form data including checking if return fields are displayed
             const tripType = document.getElementById('tripType').value;
             const ticketData = {
-                dateOfTicket: document.getElementById('dateOfTicket').value,
+                date_of_ticket: document.getElementById('date_of_ticket').value,
+                airline: document.getElementById('airline').value,
                 time: document.getElementById('time').value,
-                luggageCapacity: document.getElementById('luggageCapacity').value,
+                arrivalTime: document.getElementById('arrivalTime').value,
+                luggage_capacity: document.getElementById('luggage_capacity').value,
                 meal: document.getElementById('meal').value,
                 fare: document.getElementById('fare').value,
                 fromLocation: document.getElementById('fromLocation').value,
@@ -157,9 +290,10 @@
                 paymentStatus: document.getElementById('paymentStatus').value,
                 tripType: tripType,
                 returnDate: tripType === 'RETURN' ? document.getElementById('returnDate').value : null,
-                returnTime: tripType === 'RETURN' ? document.getElementById('returnTime').value : null
+                returnTime: tripType === 'RETURN' ? document.getElementById('returnTime').value : null,
+                pnr: document.getElementById('pnr').value,
             };
-            
+            console.log('Ticket Data:', ticketData);
             fetch('/createTicket', {
                 method: 'POST',
                 headers: {
@@ -178,8 +312,55 @@
             });
         }
 
-        // Ensure return fields are shown/hidden correctly on initial load
         document.addEventListener('DOMContentLoaded', toggleReturnFields);
+        document.addEventListener('DOMContentLoaded', function () {
+    // Function to get URL parameters
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Get the 'group' parameter from the URL
+    const group = getQueryParam('group').toUpperCase(); // Convert to uppercase to handle case-insensitivity
+
+    // Function to filter dropdown options based on the group
+    function filterDropdownOptions() {
+        const dropdown = document.getElementById('toLocation');
+        if (!dropdown) return;
+
+        // Define the list of city options for OMAN and UAE
+        const omanOptions = ['Muscat', 'Salalah', 'Sohar', 'Duqm', 'Khasab', 'Musandam', 'Nizwa', 'Sur', 'Masirah', 'Buraimi', 'Ibri', 'Rustaq', 'Thumrait', 'Marmul', 'Fahud', 'Qarn Alam', 'Mukhaizna', 'Jaaluni', 'Adam'];
+        const uaeOptions = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras al-Khaimah'];
+        const ksaOptions = ['Riyadh', 'Jeddah', 'Dammam', 'Medina', 'Abha', 'Tabuk', 'Taif', 'Qassim', 'Yanbu', 'Hail'];
+        const allOptions = omanOptions.concat(uaeOptions, ksaOptions);
+
+        let validOptions = [];
+
+        // Determine which set of options to use based on the group
+        if (group === 'OMAN') {
+            validOptions = omanOptions;
+        } else if (group === 'UAE') {
+            validOptions = uaeOptions;
+        }
+        else if (group === 'KSA') {
+            validOptions = ksaOptions;
+        }else
+        {
+            validOptions = allOptions;
+        }
+
+        // Remove options not related to the selected group
+        Array.from(dropdown.options).forEach(option => {
+            if (!validOptions.includes(option.value) && option.value !== '') {
+                dropdown.removeChild(option);
+            }
+        });
+    }
+
+    // Filter the dropdown options based on the group
+    filterDropdownOptions();
+});
+
     </script>
 </body>
 </html>

@@ -1,0 +1,633 @@
+<html lang="en" class="">
+<script src="../js/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script>
+<script src="../js/extend-native-history-api.js"></script>
+<script src="../js/requests.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<head>
+   <style>
+      body {
+         transition: opacity ease-in 0.2s;
+      }
+
+      body[unresolved] {
+         opacity: 0;
+         display: block;
+         overflow: hidden;
+         position: relative;
+      }
+   </style>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- CSRF Token -->
+   <meta name="csrf-token" content="gf23v3xe32i4TrFQDy0ba0ORRXBXFuvpjjBXvM5O">
+   <title>New Booking - Admin | FlyWings Intl</title>
+   <link rel="shortcut icon" type="image/x-icon" href="https://travelnetwork.pk/favicon.png">
+   <!-- Styles -->
+   <link href="../css/ticketBooking.css" rel="stylesheet">
+   <link href="https://travelnetwork.pk/select2/css/select2.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="https://travelnetwork.pk/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+   .ticket-count {
+      position: absolute;
+      right: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      font-size: 1.2em;
+      color: #333;
+      top: 0;
+   }
+</style>
+
+<body class="" style="padding-right: 0px;">
+   <div id="app">
+      <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+         <div class="container-fluid">
+            <a href="https://travelnetwork.pk/admin" class="navbar-brand">Admin Panel</a> <button type="button"
+               data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+               aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span
+                  class="navbar-toggler-icon"></span></button>
+            <div id="navbarSupportedContent" class="collapse navbar-collapse">
+               <ul class="navbar-nav mr-auto">
+                  <li class="nav-item"><a href="/client" class="nav-link">New
+                        Booking</a></li>
+                  <li class="nav-item"><a href="/client/bookings" class="nav-link">My
+                        Bookings</a></li>
+                  <li class="nav-item"><a href="clinet/bank_details" class="nav-link">Banks</a>
+                  </li>
+                  <li class="nav-item"><a href="https://travelnetwork.pk/admin/agents/ledger/report/from"
+                        class="nav-link">My Ledger</a></li>
+                  <li class="nav-item"><a href="javascript::void(0)" data-toggle="modal" data-target="#modal-feedback"
+                        class="nav-link">Give Feedback!</a></li>
+               </ul>
+               <ul class="navbar-nav ml-auto">
+                  <li class="nav-item dropdown">
+                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        FLY WINGS INTERNATIOAL <span class="caret"></span></a>
+                     <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
+                        <a href="https://travelnetwork.pk" target="_blank" class="dropdown-item">Visit Site</a> <a
+                           href="https://travelnetwork.pk/logout"
+                           onclick="event.preventDefault();document.getElementById('logout-form').submit();"
+                           class="dropdown-item">
+                           Logout
+                        </a>
+                        <form id="logout-form" action="https://travelnetwork.pk/logout" method="POST"
+                           style="display: none;"><input type="hidden" name="_token"
+                              value="gf23v3xe32i4TrFQDy0ba0ORRXBXFuvpjjBXvM5O"></form>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <main class="py-4" style="width: 90%; margin: auto;">
+         <div id="app">
+            <div class="row justify-content-center">
+               <div class="col-md-12">
+                  <div tabindex="0" aria-label="Loading" class="vld-overlay is-active is-full-page"
+                     style="display: none;">
+                     <div class="vld-background"></div>
+                     <div class="vld-icon">
+                        <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" width="64" height="64"
+                           stroke="#000">
+                           <g fill="none" fill-rule="evenodd">
+                              <g transform="translate(1 1)" stroke-width="2">
+                                 <circle stroke-opacity=".25" cx="18" cy="18" r="18"></circle>
+                                 <path d="M36 18c0-9.94-8.06-18-18-18">
+                                    <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                       to="360 18 18" dur="0.8s" repeatCount="indefinite"></animateTransform>
+                                 </path>
+                              </g>
+                           </g>
+                        </svg>
+                     </div>
+                  </div>
+                  <div class="card">
+                     <div class="card-header" style="display: flex;">
+                        <h5 class="card-title">New Booking</h5>
+                        <div class="ticket-count"><span style="font-weight: bold;">Tickets Avialable: </span><span
+                              id="ticket-count">0</span></div>
+                     </div>
+                     <div class="card-body">
+                        <div class="table-responsive">
+                           <table class="table table-bordered table-sm" id="ticketTable">
+                              <thead class="thead-dark">
+                                 <tr style="background: rgb(255, 179, 0); font-size: medium; font-weight: 600;">
+                                    <th scope="col">Sector</th>
+                                    <th scope="col">Airline</th>
+                                    <th scope="col">Airline SN</th>
+                                    <th scope="col">Baggage</th>
+                                    <th scope="col">Meal</th>
+                                    <th scope="col">Fare</th>
+                                 </tr>
+                              </thead>
+
+                           </table>
+                           <hr>
+                        </div>
+                        <form role="form" autocomplete="off" class="form-horizontal">
+                           <div class="form-group row">
+                              <input type="hidden" required="required" class="form-control" value="3063">
+                              <div class="col"><label for="agency_name" class="control-label">Agency Name</label> <input
+                                    type="text" id="agency_name" placeholder="e.g. Muhammad" disabled="disabled"
+                                    class="form-control"></div>
+                              <div class="col"><label for="email" class="control-label">E-Mail</label> <input
+                                    type="email" id="email" placeholder="e.g. someone@exaple.com" disabled="disabled"
+                                    class="form-control"></div>
+                              <div class="col"><label for="mobile" class="control-label">Mobile</label> <input
+                                    type="tel" placeholder="e.g. 03001234567" disabled="disabled" class="form-control">
+                              </div>
+                           </div>
+                           <div class="form-group row">
+                              <div class="col-md-12"><label for="agent_notes" class="control-label">Agent
+                                    Remarks</label> <input placeholder="e.g. special instruction about booking"
+                                    class="form-control"></div>
+                           </div>
+                           <div class="form-group row">
+                              <div class="col-md-2"><label for="adults" class="control-label">Adults</label> <input
+                                    type="number" id="adults" min="0" placeholder="e.g. 4" required="required"
+                                    class="form-control"></div>
+                              <div class="col-md-2"><label for="child" class="control-label">Child</label> <input
+                                    type="number" id="child" min="0" placeholder="e.g. 2" class="form-control"></div>
+                              <div class="col-md-2"><label for="infant" class="control-label">Infant</label> <input
+                                    type="number" id="infant" min="0" placeholder="e.g. 1" class="form-control"></div>
+                              <div class="col-md-2"><button type="button" id="confirm" class="btn btn-primary"
+                                    style="margin-top: 31px; white-space: nowrap;">Confirm Seats
+                                 </button>
+                              </div>
+                           </div>
+                           <hr>
+                           <div id="passenger_details"></div>
+                           <div id="booking_confirm" style="display: none;">
+                              <div class="form-group"><button type="submit" class="btn btn-success pull-right"
+                                    id="submitBtn">Book Now</button></div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </main>
+      <div id="modalInfo" tabindex="-1" aria-hidden="true" class="modal fade">
+         <div role="document" class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">IMPORTANT NOTICE!</h4>
+               </div>
+               <div class="modal-body">
+                  <p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
+               </div>
+               <div class="modal-footer"><button type="button" id="okButton" data-dismiss="modal"
+                     class="btn btn-secondary">OK</button></div>
+            </div>
+         </div>
+      </div>
+      <div id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modalFeedbackLabel" aria-hidden="true"
+         class="modal fade">
+         <div role="document" class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <form method="POST" action="https://travelnetwork.pk/admin/feedbacks/store" class="form-horizontal">
+                  <div class="modal-header">
+                     <h4 class="modal-title">Submit your feedback!</h4>
+                     <button type="button" data-dismiss="modal" class="close">×</button>
+                  </div>
+                  <div class="modal-body">
+                     <input type="hidden" name="_token" value="gf23v3xe32i4TrFQDy0ba0ORRXBXFuvpjjBXvM5O">
+                     <div class="form-group"><label for="title" class="col-form-label">Title</label> <input id="title"
+                           type="text" name="title" value="" placeholder="e.g. Very Happy" autofocus="autofocus"
+                           class="form-control"></div>
+                     <div class="form-group"><label for="value" class="col-form-label">Message</label> <textarea
+                           id="value" type="text" name="message"
+                           placeholder="e.g We are facing some issue or you like over service." required="required"
+                           class="form-control"></textarea></div>
+                  </div>
+                  <div class="modal-footer"><button type="button" data-dismiss="modal"
+                        class="btn btn-outline-danger">Close</button> <button type="submit"
+                        class="btn btn-outline-success">Submit</button></div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="swal2-container swal2-center swal2-backdrop-show" id="confirmationModal"
+      style="overflow-y: auto; display:none;">
+      <div aria-labelledby="swal2-title" aria-describedby="swal2-content"
+         class="swal2-popup swal2-modal swal2-icon-success swal2-show" tabindex="-1" role="dialog" aria-live="assertive"
+         aria-modal="true" style="display: flex;">
+         <div class="swal2-header">
+            <ul class="swal2-progress-steps" style="display: none;"></ul>
+            <div class="swal2-icon swal2-error" style="display: none;"></div>
+            <div class="swal2-icon swal2-question" style="display: none;"></div>
+            <div class="swal2-icon swal2-warning" style="display: none;"></div>
+            <div class="swal2-icon swal2-info" style="display: none;"></div>
+            <div class="swal2-icon swal2-success swal2-icon-show" style="display: flex;">
+               <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
+               <span class="swal2-success-line-tip"></span> <span class="swal2-success-line-long"></span>
+               <div class="swal2-success-ring"></div>
+               <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
+               <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
+            </div>
+            <img class="swal2-image" style="display: none;">
+            <h2 class="swal2-title" id="swal2-title" style="display: flex;">Booking Success</h2>
+            <button type="button" class="swal2-close" aria-label="Close this dialog" style="display: none;">×</button>
+         </div>
+         <div class="swal2-content">
+            <div id="swal2-content" class="swal2-html-container" style="display: block;">This is to inform you that your
+               ticket has been reserved successfully with status <b>HOLD</b>.<br>
+               <br>
+               We Request you to make the payment before <b id="confirmDeadline">in the next 3 hours</b> to avoid
+               any cancellation.
+            </div>
+            <input class="swal2-input" style="display: none;"><input type="file" class="swal2-file"
+               style="display: none;">
+            <div class="swal2-range" style="display: none;"><input type="range"><output></output></div>
+            <select class="swal2-select" style="display: none;"></select>
+            <div class="swal2-radio" style="display: none;"></div>
+            <label for="swal2-checkbox" class="swal2-checkbox" style="display: none;"><input type="checkbox"><span
+                  class="swal2-label"></span></label>
+            <textarea class="swal2-textarea" style="display: none;"></textarea>
+            <div class="swal2-validation-message" id="swal2-validation-message"></div>
+         </div>
+         <div class="swal2-actions"><button type="button" class="swal2-confirm swal2-styled" aria-label=""
+               style="display: inline-block; border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);"
+               id="redirectButton">OK</button><button type="button" class="swal2-cancel swal2-styled" aria-label=""
+               style="display: none;">Cancel</button></div>
+         <div class="swal2-footer" style="display: none;"></div>
+         <div class="swal2-timer-progress-bar-container">
+            <div class="swal2-timer-progress-bar" style="display: none;"></div>
+         </div>
+      </div>
+   </div>
+   <!-- Main Script File -->
+   <script src="../js/ticketBooking.js"></script>
+   <script src="../select2/js/select2.min.js"></script>
+   <script>
+      document.addEventListener("DOMContentLoaded", function () {
+         let show = ['/admin', '/admin/new/booking'].includes(window.location.pathname);
+         // Check if the popup should be displayed
+         if (show && (!getCookie("popupClosed") || has24HoursPassed())) {
+            displayPopup();
+         }
+
+         // Add event listener to the OK button
+         document.getElementById("okButton").addEventListener("click", function () {
+            hidePopup();
+            setCookie("popupClosed", "true", 1); // Set cookie to expire in 1 day
+            setCookie("lastHiddenTime", new Date().getTime(), 1); // Set cookie to expire in 1 day
+         });
+      });
+
+      function displayPopup() {
+         $('#modalInfo').modal({ backdrop: 'static', keyboard: false });
+      }
+
+      function hidePopup() {
+         $('#modalInfo').modal("hide");
+      }
+
+      function has24HoursPassed() {
+         const lastHiddenTime = parseInt(getCookie("lastHiddenTime")) || 0;
+         const currentTime = new Date().getTime();
+         return currentTime - lastHiddenTime > 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      }
+
+      function setCookie(name, value, days) {
+         let expires = "";
+         if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            expires = "; expires=" + date.toUTCString();
+         }
+         document.cookie = name + "=" + value + expires + "; path=/";
+      }
+
+      function getCookie(name) {
+         const nameEQ = name + "=";
+         const ca = document.cookie.split(';');
+         for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+         }
+         return null;
+      }
+
+      $(window).on('load', function () {
+         $('.select2').select2({
+            placeholder: "choose an item from dropdown",
+            allowClear: false,
+         });
+
+      });
+   </script>
+   <script type="text/javascript"></script>
+   <template id="auto-clicker-autofill-popup">
+      <div id="body" class="modal position-static d-block" data-bs-theme="light">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <header class="modal-header">
+                  <h6 class="modal-title text-truncate">Auto Clicker - AutoFill</h6>
+                  <div class="d-flex justify-content-center align-items-center">
+                     <button type="button" class="btn ms-2" aria-label="collapse">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                           class="bi bi-arrows-expand" style="display: none" viewBox="0 0 16 16">
+                           <path fill-rule="evenodd"
+                              d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8ZM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2ZM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10Z">
+                           </path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                           class="bi bi-dash-lg" viewBox="0 0 16 16">
+                           <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z">
+                           </path>
+                        </svg>
+                     </button>
+                     <button type="button" class="btn ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                           class="bi bi-x-lg" viewBox="0 0 16 16">
+                           <path
+                              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z">
+                           </path>
+                        </svg>
+                     </button>
+                  </div>
+               </header>
+               <main class="modal-body" id="collapse-main">
+                  <slot name="actions" hidden="">
+                     <table class="table table-sm table-hover mb-0">
+                        <thead>
+                           <tr>
+                              <th scope="col">Name/Element</th>
+                              <th scope="col">Value</th>
+                              <th scope="col"></th>
+                           </tr>
+                        </thead>
+                        <tbody class="table-group-divider"></tbody>
+                     </table>
+                  </slot>
+                  <slot name="no-actions">
+                     <div class="px-2">
+                        <div class="card w-100">
+                           <div class="card-body">
+                              <h5 class="card-title mb-3 text-primary">Start filling form...</h5>
+                              <hr>
+                              <h6 class="card-subtitle mb-2 text-muted">If you have already filled form</h6>
+                              <button type="button" auto-generate-config=""
+                                 class="btn btn-sm btn-outline-secondary">Already Filled ?</button>
+                           </div>
+                        </div>
+                     </div>
+                  </slot>
+               </main>
+               <footer class="modal-footer justify-content-center" id="collapse-footer">
+                  <ul class="nav justify-content-between w-100">
+                     <li class="nav-item">
+                        <a href="https://getautoclicker.com/docs/3.x/getting-started" class="nav-link px-2 text-muted"
+                           target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-file-richtext" viewBox="0 0 16 16">
+                              <path
+                                 d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208zM5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z">
+                              </path>
+                              <path
+                                 d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z">
+                              </path>
+                           </svg>
+                           Docs
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="https://discord.gg/ubMBeX3" class="nav-link px-2 text-muted" target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-chat-fill" viewBox="0 0 16 16">
+                              <path
+                                 d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z">
+                              </path>
+                           </svg>
+                           Chat
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="https://dev.getautoclicker.com/" class="nav-link px-2 text-muted" target="_blank"
+                           id="settings">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-gear-fill" viewBox="0 0 16 16">
+                              <path
+                                 d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z">
+                              </path>
+                           </svg>
+                           Advance
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a href="https://github.com/sponsors/Dhruv-Techapps" class="nav-link px-2 text-muted"
+                           target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-balloon-heart text-danger" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd"
+                                 d="m8 2.42-.717-.737c-1.13-1.161-3.243-.777-4.01.72-.35.685-.451 1.707.236 3.062C4.16 6.753 5.52 8.32 8 10.042c2.479-1.723 3.839-3.29 4.491-4.577.687-1.355.587-2.377.236-3.061-.767-1.498-2.88-1.882-4.01-.721L8 2.42Zm-.49 8.5c-10.78-7.44-3-13.155.359-10.063.045.041.089.084.132.129.043-.045.087-.088.132-.129 3.36-3.092 11.137 2.624.357 10.063l.235.468a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3.177 3.177 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.235-.468ZM6.013 2.06c-.649-.18-1.483.083-1.85.798-.131.258-.245.689-.08 1.335.063.244.414.198.487-.043.21-.697.627-1.447 1.359-1.692.217-.073.304-.337.084-.398Z">
+                              </path>
+                           </svg>
+                           Sponsors
+                        </a>
+                     </li>
+                  </ul>
+               </footer>
+            </div>
+         </div>
+      </div>
+   </template>
+   <template id="auto-clicker-autofill-popup-tr">
+      <tr>
+         <td>
+            <div class="text-truncate"></div>
+         </td>
+         <td>
+            <div class="text-truncate"></div>
+         </td>
+         <td>
+            <button type="button" class="btn-close" data-bs-dismiss="tr" aria-label="Close"></button>
+         </td>
+      </tr>
+   </template>
+</body>
+<script>
+   const urlParams = new URLSearchParams(window.location.search);
+   const ticket_id = urlParams.get('ticketId');
+   fetch(`/tickets/${ticket_id}`)
+      .then(response => {
+         if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+         }
+         return response.json();
+      })
+      .then(ticket => {
+         // Now you can use the 'ticket' object in your code
+         // For example, you can display the ticket data in the console:
+         console.log(ticket);
+         document.getElementById('ticket-count').innerText = ticket.no_of_tickets || 0;
+         var ticketAvailable = ticket.no_of_tickets || 0;
+         localStorage.setItem('ticketAvailable', JSON.stringify(ticketAvailable));
+         const container = document.getElementById('ticketTable');
+         const row = document.createElement('tbody');
+         row.innerHTML = `
+                <tr id=${ticket.id}>
+                    <td scope="row">FAISALABAD TO ABU DHABI</td>
+                    <td>${ticket.airline} ${ticket.from_location} - ${ticket.to_location}</td>
+                    <td>(3L)</td>
+                    <td>${ticket.luggage_capacity} KG</td>
+                    <td>${ticket.meal}</td>
+                    <td>${ticket.fare}</td>
+                </tr>
+                <tr style="background-color: gainsboro;">
+                    <th>Flight No</th>
+                    <th>PNR#</th>
+                    <th>Flight Date</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Dept Time</th>
+                    <th>Arrival Time</th>
+                </tr>
+                <tr>
+                    <td>${ticket.flight_number}</td>
+                    <td id="tickPnr">${ticket.pnr}</td>
+                    <td>${ticket.date_of_ticket}</td>
+                    <td>${ticket.from_location}</td>
+                    <td>${ticket.to_location}</td>
+                    <td>${ticket.deptTime}</td>
+                    <td>${ticket.arrivalTime}</td>
+                    <td style="display: none" id ="ticketId">${ticket.ticket_id}</td>
+                    <td style="display: none" id = "userId">${ticket.user_id}</td>
+                </tr>
+            `;
+         container.appendChild(row);
+         document.getElementById('agency_name').value = ticket.first_name;
+         document.getElementById('email').value = ticket.email;
+         document.getElementById('mobile').value = ticket.mobile;
+      })
+      .catch(error => {
+         console.error('Error fetching ticket:', error);
+      });
+
+   document.getElementById('confirm').addEventListener('click', function () {
+      var adults = document.getElementById('adults').value || 0;
+      var children = document.getElementById('child').value || 0;
+      var infants = document.getElementById('infant').value || 0;
+      var passengerList = Array(parseInt(adults)).fill('adults')
+         .concat(Array(parseInt(children)).fill('children'))
+         .concat(Array(parseInt(infants)).fill('infants'));
+      console.log('passengerList', passengerList);
+      const ticketsAvailable = localStorage.getItem('ticketAvailable');
+
+      var totalPassengers = parseInt(adults) + parseInt(children) + parseInt(infants);
+      if (totalPassengers > ticketsAvailable) {
+         alert('Error: Not enough tickets available.');
+         return;
+      }
+      var passengerDetails = document.getElementById('passenger_details');
+
+      for (var i = 0; i < totalPassengers; i++) {
+         var div = document.createElement('div');
+         div.className = 'form-group row';
+         div.setAttribute('data-passenger-type', passengerList[i]); // or 'child' or 'infant'
+
+         div.innerHTML = `
+         <div class="col-md-2">
+               <label for="surname_${i + 1}" class="control-label">${i + 1}- Surname</label>
+               <input type="text" id="surname_${i + 1}" placeholder="e.g. M Arshad" class="form-control">
+         </div>
+         <div class="col-md-2">
+               <label for="given_name_${i + 1}" class="control-label">${i + 1}- Given Name</label>
+               <input type="text" id="given_name_${i + 1}" placeholder="e.g. Ghafoor" class="form-control">
+         </div>
+         <div class="col-md-2">
+               <label for="title_${i + 1}" class="control-label">${i + 1}- Title</label>
+               <select id="title_${i + 1}" class="form-control">
+                  <option value="MR">MR.</option>
+                  <option value="MRS">MRS.</option>
+                  <option value="MS">MS.</option>
+               </select>
+         </div>
+         <div class="col-md-2">
+               <label for="passport_${i + 1}" class="control-label">${i + 1}- Passport #</label>
+               <input type="text" id="passport_${i + 1}" maxlength="50" size="50" placeholder="e.g. FP1417751" class="form-control">
+         </div>
+         <div class="col-md-2">
+               <label for="dob_${i + 1}" class="control-label">${i + 1}- DOB (Birth)</label>
+               <input type="date" id="dob_${i + 1}" class="form-control">
+         </div>
+         <div class="col-md-2">
+               <label for="doe_${i + 1}" class="control-label">${i + 1}- DOE (Expiry)</label>
+               <input type="date" id="doe_${i + 1}" class="form-control">
+         </div>
+      `;
+         passengerDetails.appendChild(div);
+         document.getElementById('booking_confirm').style.display = 'block';
+      }
+   });
+   $(document).ready(function () {
+      $("#submitBtn").click(function (e) {
+         e.preventDefault();
+         var passengers = [];
+         var ticketId = document.getElementById('ticketId').innerText;
+         var userId = document.getElementById('userId').innerText;
+         var pnr_no = document.getElementById('tickPnr').innerText;
+         //console.log(pnr_no);
+         $("#passenger_details .form-group.row").each(function () {
+            var passengerType = $(this).data('passenger-type');
+            var passenger = {
+               surname: $(this).find("input[id^='surname']").val(),
+               given_name: $(this).find("input[id^='given_name']").val(),
+               title: $(this).find("select[id^='title']").val(),
+               passport_number: $(this).find("input[id^='passport']").val(),
+               dob: $(this).find("input[id^='dob']").val(),
+               doe: $(this).find("input[id^='doe']").val(),
+               // Assuming user_id and ticket_id are somewhere in the form
+               user_id: userId,
+               ticket_id: ticketId,
+               passenger_type: passengerType,
+               pnr: pnr_no
+            };
+            passengers.push(passenger);
+         });
+
+         $.ajax({
+            url: '/save_passenger',
+            type: 'post',
+            data: JSON.stringify({ passengers: passengers }),
+            contentType: 'application/json',
+            success: function (response) {
+               if (response.success) {
+                  // Get the current date and time
+                  var now = new Date();
+                  // Add 3 hours to it
+                  now.setHours(now.getHours() + 3);
+                  // Format the date and time
+                  var deadline = now.toLocaleString();
+                  // Set the text of the #confirmDeadline element
+                  $("#confirmDeadline").text(deadline);
+                  // Display the confirmation modal
+                  $("#confirmationModal").modal('show');
+                  // Set the display property to flex
+                  $("#confirmationModal").css('display', 'flex');
+               } else {
+                  alert("Error saving data");
+               }
+            },
+            error: function () {
+               alert("Error sending data");
+            }
+         });
+      });
+   });
+   $("#redirectButton").click(function () {
+      var userId = document.getElementById('userId').innerText;
+
+      window.location.href = 'myBooking.html?userId=' + userId;
+   });
+</script>
+
+</html>

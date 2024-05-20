@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width: calc(100% - 12px);
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      display: inline-block;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Update Ticket</h2>
+    <form id="updateForm">
+      <label for="date_of_ticket">Date of Ticket:</label>
+      <input type="date" id="date_of_ticket" name="date_of_ticket">
+
+      <label for="deptTime">Departure Time:</label>
+      <input type="time" id="deptTime" name="deptTime">
+
+      <label for="luggage_capacity">Luggage Capacity:</label>
+      <input type="number" id="luggage_capacity" name="luggage_capacity">
+
+      <label for="meal">Meal:</label>
+      <input type="text" id="meal" name="meal" >
+
+      <label for="fare">Fare:</label>
+      <input type="number" id="fare" name="fare">
+
+      <label for="from_location">From Location:</label>
+      <input type="text" id="from_location" name="from_location">
+
+      <label for="to_location">To Location:</label>
+      <input type="text" id="to_location" name="to_location">
+
+      <label for="no_of_tickets">Number of Tickets:</label>
+      <input type="number" id="no_of_tickets" name="no_of_tickets">
+
+      <label for="flight_number">Flight Number:</label>
+      <input type="text" id="flight_number" name="flight_number">
+
+      <label for="payment_status">Payment Status:</label>
+      <select id="payment_status" name="payment_status">
+        <option value="PAID">PAID</option>
+        <option value="UNPAID">UNPAID</option>
+      </select>
+
+      <label for="trip_type">Trip Type:</label>
+      <select id="trip_type" name="trip_type">
+        <option value="ONE-WAY">ONE-WAY</option>
+        <option value="ROUND-TRIP">ROUND-TRIP</option>
+      </select>
+
+      <label for="arrivalTime">Arrival Time:</label>
+      <input type="time" id="arrivalTime" name="arrivalTime" >
+
+      <label for="airline">Airline:</label>
+      <input type="text" id="airline" name="airline">
+
+      <label for="pnr">PNR:</label>
+      <input type="text" id="pnr" name="pnr">
+
+      <button type="button" onclick="updateTicket()">Update Ticket</button>
+    </form>
+  </div>
+
+  <script>
+    window.onload = function() {
+      fetchTicket();
+    }
+
+    function fetchTicket() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const ticketId = urlParams.get('ticketId');
+
+      if (!ticketId) {
+        alert('No ticket ID provided.');
+        return;
+      }
+
+      fetch(`/tickets/${ticketId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ticket not found');
+          }
+          return response.json();
+        })
+        .then(ticket => {
+          document.getElementById('date_of_ticket').value = ticket.date_of_ticket ? ticket.date_of_ticket.substring(0,10) : '';
+          document.getElementById('deptTime').value = ticket.deptTime || '';
+          document.getElementById('luggage_capacity').value = ticket.luggage_capacity || '';
+          document.getElementById('meal').value = ticket.meal || '';
+          document.getElementById('fare').value = ticket.fare || '';
+          document.getElementById('from_location').value = ticket.from_location || '';
+          document.getElementById('to_location').value = ticket.to_location || '';
+          document.getElementById('no_of_tickets').value = ticket.no_of_tickets || '';
+          document.getElementById('flight_number').value = ticket.flight_number || '';
+          document.getElementById('payment_status').value = ticket.payment_status || '';
+          document.getElementById('trip_type').value = ticket.trip_type || '';
+          document.getElementById('arrivalTime').value = ticket.arrivalTime || '';
+          document.getElementById('airline').value = ticket.airline || '';
+          document.getElementById('pnr').value = ticket.pnr || '';
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    }
+
+    function updateTicket() {
+      const form = document.getElementById('updateForm');
+      const formData = new FormData(form);
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const ticketId = urlParams.get('ticketId');
+
+      if (!ticketId) {
+        alert('No ticket ID provided.');
+        return;
+      }
+
+      const ticketData = {
+        date_of_ticket: formData.get('date_of_ticket'),
+        deptTime: formData.get('deptTime'),
+        luggage_capacity: formData.get('luggage_capacity'),
+        meal: formData.get('meal'),
+        fare: formData.get('fare'),
+        from_location: formData.get('from_location'),
+        to_location: formData.get('to_location'),
+        no_of_tickets: formData.get('no_of_tickets'),
+        flight_number: formData.get('flight_number'),
+        payment_status: formData.get('payment_status'),
+        trip_type: formData.get('trip_type'),
+        arrivalTime: formData.get('arrivalTime'),
+        airline: formData.get('airline'),
+        pnr: formData.get('pnr'),
+      };
+
+      fetch(`/ticketsedit/${ticketId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticketData),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to update ticket');
+        }
+        alert('Ticket updated successfully');
+      })
+      .catch(error => {
+        console.error('Error updating ticket:', error);
+        alert('Failed to update ticket');
+      });
+    }
+  </script>
+</body>
+</html>

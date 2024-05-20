@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+	<script src="../js/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script>
+	<script src="../js/extend-native-history-api.js"></script>
+	<script src="../js/requests.js"></script>
+	<head>
+		<style>body {transition: opacity ease-in 0.2s; } 
+			body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+		</style>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- CSRF Token -->
+		<meta name="csrf-token" content="hfVmAjWUFMxmhttpgIcJSXibM1cVLyDMvS87HC7j">
+		<title>    Booking Groups - Admin | FlyWings Intl
+		</title>
+		<link rel="shortcut icon" type="image/x-icon" href="https://travelnetwork.pk/favicon.png">
+		<!-- Styles -->
+		<link href="../css/clientTable.css" rel="stylesheet">
+		<link href="https://travelnetwork.pk/select2/css/select2.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+			table tr th,
+			table tr td{
+			font-size: 16px !important;
+			text-align: center !important;
+			}
+		</style>
+		<style>
+			.btn-group-sm > .btn, .btn-sm {
+			padding: 0.1rem 0.3rem !important;
+			font-size: 0.775rem !important;
+			}
+			input[type=text].form-control {
+			text-transform: uppercase !important;
+			}
+			.select2-container {
+			width: 100% !important;
+			}
+			.select2-container .select2-selection--single {
+			height: calc(1.5em + 0.75rem + 2px);
+			}
+			.select2-container--default .select2-selection--single .select2-selection__rendered {
+			line-height: 35px;
+			}
+			.select2-container--default .select2-selection--single .select2-selection__arrow {
+			height: 35px;
+			right: 4px;
+			}
+			* {
+			box-sizing: border-box;
+			}
+			.image-container {
+			position: relative;
+			width: 100%;
+			}
+			img.image {
+			display: block;
+			width: 100%;
+			height: auto;
+			padding: 5px !important;
+			}
+			.image-container:hover,
+			img.image:hover {
+			padding: 0 !important;
+			}
+			.overlay {
+			position: inherit;
+			background: rgb(49, 47, 47);
+			color: white;
+			width: 100%;
+			transition: .5s ease;
+			opacity: 1;
+			font-size: 20px;
+			padding: 10px;
+			text-align: center;
+			}
+			.image-container a,
+			.image-container a:hover,
+			.image-container a:visited,
+			.image-container a:focus,
+			.image-container a:active {
+			color: white;
+			text-decoration: none !important;
+			}
+			.image-container:hover .overlay {
+			font-weight: 700;
+			opacity: 1;
+			color: white;
+			background: rgb(49, 47, 36);
+			}
+			.logo {
+			width: 100%;
+			height: auto;
+			max-width: 200px;
+			}
+		</style>
+  </head>
+	<body>
+		<div id="app">
+			<nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+				<div class="container-fluid">
+					<a href="/client" class="navbar-brand">Admin Panel</a> <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button> 
+					<div id="navbarSupportedContent" class="collapse navbar-collapse">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item"><a href="/client" class="nav-link">New Booking</a></li>
+							<li class="nav-item"><a class="nav-link"
+                                       href="../public/myBooking.html">My Bookings</a></li>
+							<li class="nav-item"><a href="/client/bank" class="nav-link">Banks</a></li>
+						</ul>
+						<ul class="navbar-nav ml-auto">
+							<li class="nav-item dropdown">
+								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								FLY WINGS INTERNATIOAL <span class="caret"></span></a> 
+								<div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
+									<a href="https://travelnetwork.pk" target="_blank" class="dropdown-item">Visit Site</a> <a href="https://travelnetwork.pk/logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="dropdown-item">
+									Logout
+									</a> 
+									<form id="logout-form" action="https://travelnetwork.pk/logout" method="POST" style="display: none;"><input type="hidden" name="_token" value="hfVmAjWUFMxmhttpgIcJSXibM1cVLyDMvS87HC7j"></form>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<main class="py-4" style="width: 90%; margin: auto;">
+				<div id="app">
+					<div data-v-62498c33="" class="row justify-content-center">
+						<div data-v-62498c33="" class="col-md-12">
+							<div data-v-62498c33="" tabindex="0" aria-label="Loading" class="vld-overlay is-active is-full-page" style="display: none;">
+								<div class="vld-background"></div>
+								<div class="vld-icon">
+									<svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" width="64" height="64" stroke="#000">
+										<g fill="none" fill-rule="evenodd">
+											<g transform="translate(1 1)" stroke-width="2">
+												<circle stroke-opacity=".25" cx="18" cy="18" r="18"></circle>
+												<path d="M36 18c0-9.94-8.06-18-18-18">
+													<animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.8s" repeatCount="indefinite"></animateTransform>
+												</path>
+											</g>
+										</g>
+									</svg>
+								</div>
+							</div>
+							<form data-v-62498c33="">
+								<div data-v-62498c33="" class="form-group row">
+									<div data-v-62498c33="" class="col">
+										<label data-v-62498c33="" for="type">Type</label> 
+										<select data-v-62498c33="" id="type" class="form-control">
+											<option data-v-62498c33="" value="0">All</option>
+											<option data-v-62498c33="" value="UAE">UAE</option>
+											<option data-v-62498c33="" value="KSA ONEWAY">KSA ONEWAY</option>
+											<option data-v-62498c33="" value="UMRAH">UMRAH</option>
+										</select>
+									</div>
+									<div data-v-62498c33="" class="col"><label data-v-62498c33="" for="dept_date">Dept Date</label> <input data-v-62498c33="" type="date" id="dept_date" class="form-control"></div>
+									<div data-v-62498c33="" class="col">
+										<label data-v-62498c33="" for="sector">Sector</label> 
+										<select data-v-62498c33="" id="sector" class="form-control v-select">
+											<option data-v-62498c33="" value="0">All Sectors</option>
+											<option data-v-62498c33="" value="FAISALABAD TO ABU DHABI">FAISALABAD TO ABU DHABI</option>
+											<option data-v-62498c33="" value="FAISALABAD TO DUBAI">FAISALABAD TO DUBAI</option>
+											<option data-v-62498c33="" value="FAISALABAD TO JEDDAH">FAISALABAD TO JEDDAH</option>
+											<option data-v-62498c33="" value="FAISALABAD TO RIYADH">FAISALABAD TO RIYADH</option>
+											<option data-v-62498c33="" value="FAISALABAD TO SHARJA">FAISALABAD TO SHARJA</option>
+											<option data-v-62498c33="" value="ISB-SHJ-JED-SHJ-ISB">ISB-SHJ-JED-SHJ-ISB</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO DAMMAM">ISLAMABAD TO DAMMAM</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO DAMMAM.">ISLAMABAD TO DAMMAM.</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO DUBAI">ISLAMABAD TO DUBAI</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO JEDDAH">ISLAMABAD TO JEDDAH</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO LONDON">ISLAMABAD TO LONDON</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO MADINAH">ISLAMABAD TO MADINAH</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO MANCHESTER">ISLAMABAD TO MANCHESTER</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO MUSCAT">ISLAMABAD TO MUSCAT</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO RIYADH">ISLAMABAD TO RIYADH</option>
+											<option data-v-62498c33="" value="ISLAMABAD TO SHARJA">ISLAMABAD TO SHARJA</option>
+											<option data-v-62498c33="" value="ISLAMABAD-JEDDAH-ISLAMABAD">ISLAMABAD-JEDDAH-ISLAMABAD</option>
+											<option data-v-62498c33="" value="LAHORE TO DAMMAM">LAHORE TO DAMMAM</option>
+											<option data-v-62498c33="" value="LAHORE TO DUBAI">LAHORE TO DUBAI</option>
+											<option data-v-62498c33="" value="LAHORE TO DUBAI.">LAHORE TO DUBAI.</option>
+											<option data-v-62498c33="" value="LAHORE TO JEDDAH">LAHORE TO JEDDAH</option>
+											<option data-v-62498c33="" value="LAHORE TO LONDON">LAHORE TO LONDON</option>
+											<option data-v-62498c33="" value="LAHORE TO MANCHESTER">LAHORE TO MANCHESTER</option>
+											<option data-v-62498c33="" value="LAHORE TO MUSCAT">LAHORE TO MUSCAT</option>
+											<option data-v-62498c33="" value="LAHORE TO RAS AL KHAIMAH">LAHORE TO RAS AL KHAIMAH</option>
+											<option data-v-62498c33="" value="LAHORE TO RIYADH">LAHORE TO RIYADH</option>
+											<option data-v-62498c33="" value="LAHORE TO SHARJA">LAHORE TO SHARJA</option>
+											<option data-v-62498c33="" value="LAHORE-JEDDAH-LAHORE">LAHORE-JEDDAH-LAHORE</option>
+											<option data-v-62498c33="" value="LAHORE-JEDDAH-LAHORE (BUSINESS CLASS)">LAHORE-JEDDAH-LAHORE (BUSINESS CLASS)</option>
+											<option data-v-62498c33="" value="LAHORE-MADINAH-LAHORE">LAHORE-MADINAH-LAHORE</option>
+											<option data-v-62498c33="" value="LHE-KWI-JED-KWI-LHE">LHE-KWI-JED-KWI-LHE</option>
+											<option data-v-62498c33="" value="LHE-MED-JED-LHE">LHE-MED-JED-LHE</option>
+											<option data-v-62498c33="" value="LYP-BAH-JED-BAH-LYP">LYP-BAH-JED-BAH-LYP</option>
+											<option data-v-62498c33="" value="LYP-DXB-JED-DXB-LYP">LYP-DXB-JED-DXB-LYP</option>
+											<option data-v-62498c33="" value="MULTAN TO SHARJA">MULTAN TO SHARJA</option>
+											<option data-v-62498c33="" value="MULTAN-JEDDAH">MULTAN-JEDDAH</option>
+											<option data-v-62498c33="" value="MULTAN-JEDDAH-MULTAN">MULTAN-JEDDAH-MULTAN</option>
+											<option data-v-62498c33="" value="PESHAWAR TO JEDDAH">PESHAWAR TO JEDDAH</option>
+											<option data-v-62498c33="" value="PESHAWAR TO RIYADH">PESHAWAR TO RIYADH</option>
+											<option data-v-62498c33="" value="PESHAWAR-JEDDAH-PESHAWAR">PESHAWAR-JEDDAH-PESHAWAR</option>
+											<option data-v-62498c33="" value="SHARJA TO ISLAMABAD">SHARJA TO ISLAMABAD</option>
+											<option data-v-62498c33="" value="SIALKOT TO SHARJA">SIALKOT TO SHARJA</option>
+										</select>
+									</div>
+									<div data-v-62498c33="" class="col"><button data-v-62498c33="" class="btn btn-outline-info btn-block" style="margin-top: 32px;">Search
+										</button>
+									</div>
+								</div>
+							</form>
+							<div data-v-62498c33="" class="table-responsive">
+								<table data-v-62498c33="" class="table table-bordered table-sm"  id="tickets">
+									<!---->
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			<div id="modalInfo" tabindex="-1" aria-hidden="true" class="modal fade">
+				<div role="document" class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">IMPORTANT NOTICE!</h4>
+						</div>
+						<div class="modal-body">
+							<p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
+						</div>
+						<div class="modal-footer"><button type="button" id="okButton" data-dismiss="modal" class="btn btn-secondary">OK</button></div>
+					</div>
+				</div>
+			</div>
+			<div id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modalFeedbackLabel" aria-hidden="true" class="modal fade">
+				<div role="document" class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<form method="POST" action="https://travelnetwork.pk/admin/feedbacks/store" class="form-horizontal">
+							<div class="modal-header">
+								<h4 class="modal-title">Submit your feedback!</h4>
+								<button type="button" data-dismiss="modal" class="close">×</button>
+							</div>
+							<div class="modal-body">
+								<input type="hidden" name="_token" value="hfVmAjWUFMxmhttpgIcJSXibM1cVLyDMvS87HC7j"> 
+								<div class="form-group"><label for="title" class="col-form-label">Title</label> <input id="title" type="text" name="title" value="" placeholder="e.g. Very Happy" autofocus="autofocus" class="form-control"></div>
+								<div class="form-group"><label for="value" class="col-form-label">Message</label> <textarea id="value" type="text" name="message" placeholder="e.g We are facing some issue or you like over service." required="required" class="form-control"></textarea></div>
+							</div>
+							<div class="modal-footer"><button type="button" data-dismiss="modal" class="btn btn-outline-danger">Close</button> <button type="submit" class="btn btn-outline-success">Submit</button></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Main Script File -->
+		<script src="../js/client.js"></script>
+		<script src="https://travelnetwork.pk/select2/js/select2.min.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+			    let show = ['/admin', '/admin/new/booking'].includes(window.location.pathname);
+			    // Check if the popup should be displayed
+			    if (show && (!getCookie("popupClosed") || has24HoursPassed())) {
+			        displayPopup();
+			    }
+			
+			    // Add event listener to the OK button
+			    document.getElementById("okButton").addEventListener("click", function () {
+			        hidePopup();
+			        setCookie("popupClosed", "true", 1); // Set cookie to expire in 1 day
+			        setCookie("lastHiddenTime", new Date().getTime(), 1); // Set cookie to expire in 1 day
+			    });
+			});
+			
+			function displayPopup() {
+			    $('#modalInfo').modal({backdrop: 'static', keyboard: false});
+			}
+			
+			function hidePopup() {
+			    $('#modalInfo').modal("hide");
+			}
+			
+			function has24HoursPassed() {
+			    const lastHiddenTime = parseInt(getCookie("lastHiddenTime")) || 0;
+			    const currentTime = new Date().getTime();
+			    return currentTime - lastHiddenTime > 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+			}
+			
+			function setCookie(name, value, days) {
+			    let expires = "";
+			    if (days) {
+			        const date = new Date();
+			        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+			        expires = "; expires=" + date.toUTCString();
+			    }
+			    document.cookie = name + "=" + value + expires + "; path=/";
+			}
+			
+			function getCookie(name) {
+			    const nameEQ = name + "=";
+			    const ca = document.cookie.split(';');
+			    for (let i = 0; i < ca.length; i++) {
+			        let c = ca[i];
+			        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+			        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+			    }
+			    return null;
+			}
+			
+			$(window).on('load', function () {
+			    $('.select2').select2({
+			        placeholder: "choose an item from dropdown",
+			        allowClear: false,
+			    });
+			
+			                        });
+		</script>
+		<script>
+			function showDetails(id) {
+			    $("#" + id).toggle();
+			}
+		</script>
+		<template id="auto-clicker-autofill-popup">
+			<style>
+				@import url(https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css);
+				@import url(https://fonts.googleapis.com/css?family=Poppins:300,400,500&subset=latin-ext);
+				#body {
+				background: white;
+				border-radius: 5px;
+				box-shadow: 0 30px 50px 0 rgb(44 49 59 / 20%);
+				overflow: hidden;
+				font-size: 14px;
+				font-family: 'Poppins', sans-serif;
+				min-width: 250px;
+				max-width: 400px;
+				}
+				.modal-dialog {
+				margin: auto;
+				}
+				.modal-content {
+				border: none;
+				}
+				/*Header*/
+				.modal-header {
+				--bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+				padding-top: 0.5em;
+				padding-bottom: 0.5em;
+				padding-left: 0;
+				height: 47px;
+				background: rgba(112.520718, 44.062154, 249.437846, 0.1);
+				color: #fff;
+				border: none;
+				}
+				.modal-header button.btn {
+				color: #712cf9;
+				width: 1em;
+				height: 1em;
+				display: flex;
+				box-sizing: content-box;
+				justify-content: center;
+				align-items: center;
+				padding: 0;
+				--bs-btn-close-opacity: 1;
+				--bs-btn-close-hover-opacity: 0.75;
+				--bs-btn-close-focus-shadow: 0 0 0 0.25em rgba(13, 110, 253, 0.25);
+				opacity: var(--bs-btn-close-opacity);
+				}
+				.modal-header button.btn svg {
+				width: inherit;
+				height: inherit;
+				}
+				.modal-header button.btn:focus {
+				box-shadow: var(--bs-btn-close-focus-shadow);
+				}
+				.modal-header button.btn:hover {
+				opacity: var(--bs-btn-close-hover-opacity);
+				}
+				.modal-header button.expand .bi-arrows-expand {
+				display: block !important;
+				}
+				.modal-header button.expand .bi-dash-lg {
+				display: none;
+				}
+				.modal-header .modal-title {
+				padding-left: 2em;
+				color: #712cf9;
+				position: relative;
+				font-size: 1em;
+				}
+				.modal-header .modal-title::before {
+				content: '';
+				position: absolute;
+				left: 0.75em;
+				top: calc(50% - 0.375em);
+				display: block;
+				width: 0.75em;
+				height: 0.75em;
+				border-radius: 50%;
+				background: red;
+				cursor: pointer;
+				box-shadow: 0 0 0 rgba(255, 0, 0, 0.4);
+				animation: pulse 2s infinite;
+				}
+				@-webkit-keyframes pulse {
+				0% {
+				-webkit-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+				}
+				70% {
+				-webkit-box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+				}
+				100% {
+				-webkit-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+				}
+				}
+				@keyframes pulse {
+				0% {
+				-moz-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+				box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+				}
+				70% {
+				-moz-box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+				box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+				}
+				100% {
+				-moz-box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+				box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+				}
+				}
+				/*Body*/
+				.modal-body {
+				max-height: calc(100vh - 7em);
+				overflow-y: auto;
+				overflow-x: hidden;
+				padding: 0.5em 0;
+				}
+				td div {
+				vertical-align: middle;
+				width: 180px;
+				line-height: 24px;
+				}
+				tr button {
+				visibility: hidden;
+				}
+				tr:hover button {
+				visibility: visible;
+				}
+				/*Footer*/
+				.modal-footer {
+				padding: 0;
+				--bs-bg-opacity: 1;
+				background-color: rgba(var(--bs-tertiary-bg-rgb), var(--bs-bg-opacity)) !important;
+				}
+				.modal-footer a {
+				display: flex;
+				align-items: center;
+				}
+				.modal-footer a svg {
+				margin-right: 0.15em;
+				}
+				.modal-footer a:hover {
+				color: #712cf9 !important;
+				}
+			</style>
+			<div id="body" class="modal position-static d-block" data-bs-theme="light">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<header class="modal-header">
+							<h6 class="modal-title text-truncate">Auto Clicker - AutoFill</h6>
+							<div class="d-flex justify-content-center align-items-center">
+								<button type="button" class="btn ms-2" aria-label="collapse">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-expand" style="display: none" viewBox="0 0 16 16">
+										<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8ZM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2ZM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10Z"></path>
+									</svg>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+										<path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"></path>
+									</svg>
+								</button>
+								<button type="button" class="btn ms-2" data-bs-dismiss="modal" aria-label="Close">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+									</svg>
+								</button>
+							</div>
+						</header>
+						<main class="modal-body" id="collapse-main">
+							<slot name="actions" hidden="">
+								<table class="table table-sm table-hover mb-0">
+									<thead>
+										<tr>
+											<th scope="col">Name/Element</th>
+											<th scope="col">Value</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody class="table-group-divider"></tbody>
+								</table>
+							</slot>
+							<slot name="no-actions">
+								<div class="px-2">
+									<div class="card w-100">
+										<div class="card-body">
+											<h5 class="card-title mb-3 text-primary">Start filling form...</h5>
+											<hr>
+											<h6 class="card-subtitle mb-2 text-muted">If you have already filled form</h6>
+											<button type="button" auto-generate-config="" class="btn btn-sm btn-outline-secondary">Already Filled ?</button>
+										</div>
+									</div>
+								</div>
+							</slot>
+						</main>
+						<footer class="modal-footer justify-content-center" id="collapse-footer">
+							<ul class="nav justify-content-between w-100">
+								<li class="nav-item">
+									<a href="https://getautoclicker.com/docs/3.x/getting-started" class="nav-link px-2 text-muted" target="_blank">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-richtext" viewBox="0 0 16 16">
+											<path d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208zM5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"></path>
+											<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"></path>
+										</svg>
+										Docs
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://discord.gg/ubMBeX3" class="nav-link px-2 text-muted" target="_blank">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+											<path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"></path>
+										</svg>
+										Chat
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://dev.getautoclicker.com/" class="nav-link px-2 text-muted" target="_blank" id="settings">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+											<path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+										</svg>
+										Advance
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="https://github.com/sponsors/Dhruv-Techapps" class="nav-link px-2 text-muted" target="_blank">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-balloon-heart text-danger" viewBox="0 0 16 16">
+											<path fill-rule="evenodd" d="m8 2.42-.717-.737c-1.13-1.161-3.243-.777-4.01.72-.35.685-.451 1.707.236 3.062C4.16 6.753 5.52 8.32 8 10.042c2.479-1.723 3.839-3.29 4.491-4.577.687-1.355.587-2.377.236-3.061-.767-1.498-2.88-1.882-4.01-.721L8 2.42Zm-.49 8.5c-10.78-7.44-3-13.155.359-10.063.045.041.089.084.132.129.043-.045.087-.088.132-.129 3.36-3.092 11.137 2.624.357 10.063l.235.468a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3.177 3.177 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.235-.468ZM6.013 2.06c-.649-.18-1.483.083-1.85.798-.131.258-.245.689-.08 1.335.063.244.414.198.487-.043.21-.697.627-1.447 1.359-1.692.217-.073.304-.337.084-.398Z"></path>
+										</svg>
+										Sponsors
+									</a>
+								</li>
+							</ul>
+						</footer>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template id="auto-clicker-autofill-popup-tr">
+			<tr>
+				<td>
+					<div class="text-truncate"></div>
+				</td>
+				<td>
+					<div class="text-truncate"></div>
+				</td>
+				<td>
+					<button type="button" class="btn-close" data-bs-dismiss="tr" aria-label="Close"></button>
+				</td>
+			</tr>
+		</template>
+	</body>
+  <script>
+$(document).ready(function(){
+    // Hide all the detail rows initially
+    $("tbody[id^='group_body_']").hide();
+
+    // Toggle visibility of detail row on click
+    $(document).on('click', "tr[data-v-62498c33]", function(){
+      console.log('clicked row with id: ' + $(this).attr('id'));
+      var detailRowId = $(this).attr('id');
+      detailRowId = detailRowId.replace(detailRowId, 'group_body_'+detailRowId);
+        $("#" + detailRowId).toggle();
+    });
+});
+  </script>
+    <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const group = urlParams.get('group');
+	const socket = io();
+    console.log('group:', group); 
+    fetch(`/tickets?group=${group}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        // Display the error
+        document.getElementById('error').textContent = data.error;
+      } else {
+        // Create and append elements for each ticket
+        const container = document.getElementById('tickets');
+        const pakistanAirlines = [
+          "PIA",
+          "Airblue",
+          "Serene Air",
+          "AirSial",
+          "Fly Jinnah"
+        ];
+        const addedAirlines = [];
+        pakistanAirlines.forEach(airline => {
+        data.forEach(ticket => {
+          if(ticket.airline == airline && !addedAirlines.includes(airline))
+          {
+            addedAirlines.push(airline);
+            const row = document.createElement('tbody');
+            row.innerHTML = `<thead data-v-62498c33="">
+            <tr data-v-62498c33="">
+                <th data-v-62498c33="" colspan="6" style="text-align: center;"><img data-v-62498c33="" src="/storage/airlines/1693054243.png" alt="01. AIR ARABIA LYP-AUH" style="width: 150px; vertical-align: middle;"> <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.to_location} TO ${ticket.from_location}</span></th>
+            </tr>
+            <tr data-v-62498c33="" class="thead-dark">
+                <th data-v-62498c33="" scope="col">DATE</th>
+                <th data-v-62498c33="" scope="col">No of Tickets</th>
+				<th data-v-62498c33="" scope="col">PNR</th>
+                <th data-v-62498c33="" scope="col">BAG</th>
+                <th data-v-62498c33="" scope="col">MEAL</th>
+                <th data-v-62498c33="" scope="col">FARE</th>
+                <th data-v-62498c33="" scope="col"></th>
+            </tr>
+          </thead>`;
+            container.appendChild(row);
+        }
+        if(ticket.airline == airline){
+          const date = new Date(ticket.date_of_ticket);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+          const year = date.getFullYear();
+          const formattedDate = `${day}-${month}-${year}`;
+          const row = document.createElement('tbody');
+
+          row.innerHTML = `
+          <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(95, 63, 63); color: white;">
+            <td>${formattedDate}</td>
+            <td>${ticket.no_of_tickets}</td>
+			<td>${ticket.pnr}</td>
+            <td>${ticket.luggage_capacity} KG</td>
+            <td><span style="color: red;"><b>${ticket.meal}</b></span></td>
+            <td><b>${ticket.fare} PKR/-</b></td>
+            <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
+			<td>
+				</td>
+            </tr>
+          `;
+          container.appendChild(row);
+
+          // Add additional HTML
+          const additionalHTML = document.createElement('tbody');
+          additionalHTML.setAttribute('data-v-62498c33', '');
+          additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
+          additionalHTML.style.display = 'none';
+		  if(ticket.trip_type == 'RETURN'){
+			additionalHTML.innerHTML = `
+            <tr style="background-color: gainsboro;">
+              <th scope="col">Return Date</th>
+              <th scope="col">Flight #</th>
+              <th scope="col">Origin/Destination</th>
+              <th scope="col">Dept Time</th>
+              <th scope="col">Arrival Time</th>
+              <th scope="col"></th>
+            </tr>
+            <tr>
+				<td style="background-color: rgb(27, 66, 39); color: white;">${ticket.returnDate} - ${ticket.returnTime}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+              <td></td>
+            </tr>
+          `;
+		}
+		else{
+          additionalHTML.innerHTML = `
+            <tr style="background-color: gainsboro;">
+              <th scope="col"></th>
+              <th scope="col">Flight #</th>
+              <th scope="col">Origin/Destination</th>
+              <th scope="col">Dept Time</th>
+              <th scope="col">Arrival Time</th>
+              <th scope="col"></th>
+            </tr>
+            <tr>
+              <td scope="row"></td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+              <td></td>
+            </tr>
+          `;
+		}
+          container.appendChild(additionalHTML);
+          }
+        });
+      });
+      }
+    })
+    .catch(error => {
+      // Display any network errors
+  console.error('Error:', error);
+    });
+	socket.on('ticketCreated', (ticket) => {
+		const container = document.getElementById('tickets');
+		const date = new Date(ticket.date_of_ticket);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+          const year = date.getFullYear();
+          const formattedDate = `${day}-${month}-${year}`;
+          const row = document.createElement('tbody');
+
+          row.innerHTML = `
+          <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(95, 63, 63); color: white;">
+            <td>${formattedDate}</td>
+            <td>${ticket.no_of_tickets}</td>
+            <td>${ticket.luggage_capacity} KG</td>
+            <td><span style="color: red;"><b>${ticket.meal}</b></span></td>
+            <td><b>${ticket.fare} PKR/-</b></td>
+            <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
+            </tr>
+          `;
+          container.appendChild(row);
+
+          // Add additional HTML
+          const additionalHTML = document.createElement('tbody');
+          additionalHTML.setAttribute('data-v-62498c33', '');
+          additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
+          additionalHTML.style.display = 'none';
+          additionalHTML.innerHTML = `
+            <tr style="background-color: gainsboro;">
+              <th scope="col"></th>
+              <th scope="col">Flight #</th>
+              <th scope="col">Origin/Destination</th>
+              <th scope="col">Dept Time</th>
+              <th scope="col">Arrival Time</th>
+              <th scope="col"></th>
+            </tr>
+            <tr>
+              <td scope="row"></td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flightNumber}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.fromLocation} - ${ticket.toLocation}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.time}</td>
+              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+              <td></td>
+            </tr>
+          `;
+          container.appendChild(additionalHTML);
+  });
+  </script>
+</html>

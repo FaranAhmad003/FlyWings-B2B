@@ -1,0 +1,483 @@
+<html lang="en">
+   <script src="../js/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script>
+   <script src="../js/extend-native-history-api.js"></script>
+   <script src="../js/requests.js"></script>
+   <head>
+      <style>body {transition: opacity ease-in 0.2s; } 
+         body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+      </style>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- CSRF Token -->
+      <meta name="csrf-token" content="EwHTpkuCn3h0fVW6E8mn4KZoQTxDr2f6W1NHuLwS">
+      <title> Bookings - Admin | FlyWings Intl</title>
+      <link rel="shortcut icon" type="image/x-icon" href="https://travelnetwork.pk/favicon.png">
+      <!-- Styles -->
+      <link href="../css/myBooking.css" rel="stylesheet">
+      <link href="../select2/css/select2.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+      <script charset="utf-8" src="../js/myBooking.js"></script>
+   </head>
+   <style>
+      .btn {
+  opacity: 1 !important;
+}
+
+td:hover .btn {
+  opacity: 1;
+}
+   </style>
+   <body>
+      <div id="app">
+         <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/admin">Admin Panel</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../public/allBooking.html">Manage Booking</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/bank">Banks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">My Ledger</a>
+                        </li>
+                        <li class="nav-item">
+
+                        </li>
+                    </ul>
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Authentication Links -->
+                        <li class="nav-item dropdown">
+                            <form id="logout-form" action="https://travelnetwork.pk/logout" method="POST"
+                                style="display: none;">
+                                <input type="hidden" name="_token" value="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
+                            </form>
+                </div>
+                </li>
+                </ul>
+            </div>
+    </div>
+    </nav>
+         <main class="py-4" style="width: 90%; margin: auto;">
+            <div id="app">
+               <div>
+                  <div tabindex="0" aria-label="Loading" class="vld-overlay is-active is-full-page" style="display: none;">
+                     <div class="vld-background"></div>
+                     <div class="vld-icon">
+                        <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" width="64" height="64" stroke="#000">
+                           <g fill="none" fill-rule="evenodd">
+                              <g transform="translate(1 1)" stroke-width="2">
+                                 <circle stroke-opacity=".25" cx="18" cy="18" r="18"></circle>
+                                 <path d="M36 18c0-9.94-8.06-18-18-18">
+                                    <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.8s" repeatCount="indefinite"></animateTransform>
+                                 </path>
+                              </g>
+                           </g>
+                        </svg>
+                     </div>
+                  </div>
+                  <div class="row justify-content-center">
+                     <div class="col-md-12">
+                        <h3>Bookings</h3>
+                        <div class="form-group row">
+                           <div class="col-md-4"><label for="group_sector">Keyword</label> <input id="group_sector" placeholder="Type your query.." class="form-control"></div>
+                           <div class="col-md-4"><label for="agent_name">Dept Date</label> <input type="date" id="dept_date" class="form-control"></div>
+                           <div class="col-md-2">
+                              <label for="status">Status</label> 
+                              <select id="status" class="form-control">
+                                 <option value="-1">
+                                    All
+                                 </option>
+                                 <option value="0">
+                                    Hold
+                                 </option>
+                                 <option value="1">
+                                    Confirmed
+                                 </option>
+                                 <option value="3">
+                                    Canceled
+                                 </option>
+                              </select>
+                           </div>
+                           <div class="col-md-2"><button type="button" class="btn btn-outline-info btn-block" style="margin-top: 32px;">Search</button></div>
+                        </div>
+                        <div class="table-responsive">
+                           <table class="table table-bordered table-hover table-sm" id="recordTable">
+                              <thead class="thead-dark">
+                                 <tr>
+                                    <th scope="col">Sr</th>
+                                    <th scope="col">Invoice</th>
+                                    <th scope="col">Client Username</th>
+                                    <th scope="col">Group</th>
+                                    <th scope="col" width="10%">Dep/Arv</th>
+                                    <th scope="col">Passenger Type</th>
+                                    <th scope="col">Reserved</th>
+                                    <th scope="col" width="15%">Status</th>
+                                    <th scope="col"></th>
+                                 </tr>
+                              </thead>
+                            
+                           </table>
+                           <!---->
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </main>
+         <div id="modalInfo" tabindex="-1" aria-hidden="true" class="modal fade">
+            <div role="document" class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">IMPORTANT NOTICE!</h4>
+                  </div>
+                  <div class="modal-body">
+                     <p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
+                  </div>
+                  <div class="modal-footer"><button type="button" id="okButton" data-dismiss="modal" class="btn btn-secondary">OK</button></div>
+               </div>
+            </div>
+         </div>
+         <div id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modalFeedbackLabel" aria-hidden="true" class="modal fade">
+            <div role="document" class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                  <form method="POST" action="https://travelnetwork.pk/admin/feedbacks/store" class="form-horizontal">
+                     <div class="modal-header">
+                        <h4 class="modal-title">Submit your feedback!</h4>
+                        <button type="button" data-dismiss="modal" class="close">×</button>
+                     </div>
+                     <div class="modal-body">
+                        <input type="hidden" name="_token" value="EwHTpkuCn3h0fVW6E8mn4KZoQTxDr2f6W1NHuLwS"> 
+                        <div class="form-group"><label for="title" class="col-form-label">Title</label> <input id="title" type="text" name="title" value="" placeholder="e.g. Very Happy" autofocus="autofocus" class="form-control"></div>
+                        <div class="form-group"><label for="value" class="col-form-label">Message</label> <textarea id="value" type="text" name="message" placeholder="e.g We are facing some issue or you like over service." required="required" class="form-control"></textarea></div>
+                     </div>
+                     <div class="modal-footer"><button type="button" data-dismiss="modal" class="btn btn-outline-danger">Close</button> <button type="submit" class="btn btn-outline-success">Submit</button></div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="modal" tabindex="-1" role="dialog" id="confirmationModal">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title">Confirmation</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <p id="confirmationMessage"></p>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-primary" id="confirmButton">Yes</button>
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+             </div>
+           </div>
+         </div>
+       </div>
+      <!-- Main Script File -->
+      <script src="../select2/js/select2.min.js"></script>
+      <script>
+         document.addEventListener("DOMContentLoaded", function () {
+             let show = ['/admin', '/admin/new/booking'].includes(window.location.pathname);
+             // Check if the popup should be displayed
+             if (show && (!getCookie("popupClosed") || has24HoursPassed())) {
+                 displayPopup();
+             }
+         
+             // Add event listener to the OK button
+             document.getElementById("okButton").addEventListener("click", function () {
+                 hidePopup();
+                 setCookie("popupClosed", "true", 1); // Set cookie to expire in 1 day
+                 setCookie("lastHiddenTime", new Date().getTime(), 1); // Set cookie to expire in 1 day
+             });
+         });
+         
+         function displayPopup() {
+             $('#modalInfo').modal({backdrop: 'static', keyboard: false});
+         }
+         
+         function hidePopup() {
+             $('#modalInfo').modal("hide");
+         }
+         
+         function has24HoursPassed() {
+             const lastHiddenTime = parseInt(getCookie("lastHiddenTime")) || 0;
+             const currentTime = new Date().getTime();
+             return currentTime - lastHiddenTime > 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+         }
+         
+         function setCookie(name, value, days) {
+             let expires = "";
+             if (days) {
+                 const date = new Date();
+                 date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                 expires = "; expires=" + date.toUTCString();
+             }
+             document.cookie = name + "=" + value + expires + "; path=/";
+         }
+         
+         function getCookie(name) {
+             const nameEQ = name + "=";
+             const ca = document.cookie.split(';');
+             for (let i = 0; i < ca.length; i++) {
+                 let c = ca[i];
+                 while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                 if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+             }
+             return null;
+         }
+         
+         $(window).on('load', function () {
+             $('.select2').select2({
+                 placeholder: "choose an item from dropdown",
+                 allowClear: false,
+             });
+         
+                                 });
+      </script>
+      <template id="auto-clicker-autofill-popup">
+         <div id="body" class="modal position-static d-block" data-bs-theme="light">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <header class="modal-header">
+                     <h6 class="modal-title text-truncate">Auto Clicker - AutoFill</h6>
+                     <div class="d-flex justify-content-center align-items-center">
+                        <button type="button" class="btn ms-2" aria-label="collapse">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-expand" style="display: none" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8ZM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2ZM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10Z"></path>
+                           </svg>
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"></path>
+                           </svg>
+                        </button>
+                        <button type="button" class="btn ms-2" data-bs-dismiss="modal" aria-label="Close">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+                           </svg>
+                        </button>
+                     </div>
+                  </header>
+                  <main class="modal-body" id="collapse-main">
+                     <slot name="actions" hidden="">
+                        <table class="table table-sm table-hover mb-0">
+                           <thead>
+                              <tr>
+                                 <th scope="col">Name/Element</th>
+                                 <th scope="col">Value</th>
+                                 <th scope="col"></th>
+                              </tr>
+                           </thead>
+                           <tbody class="table-group-divider"></tbody>
+                        </table>
+                     </slot>
+                     <slot name="no-actions">
+                        <div class="px-2">
+                           <div class="card w-100">
+                              <div class="card-body">
+                                 <h5 class="card-title mb-3 text-primary">Start filling form...</h5>
+                                 <hr>
+                                 <h6 class="card-subtitle mb-2 text-muted">If you have already filled form</h6>
+                                 <button type="button" auto-generate-config="" class="btn btn-sm btn-outline-secondary">Already Filled ?</button>
+                              </div>
+                           </div>
+                        </div>
+                     </slot>
+                  </main>
+                  <footer class="modal-footer justify-content-center" id="collapse-footer">
+                     <ul class="nav justify-content-between w-100">
+                        <li class="nav-item">
+                           <a href="https://getautoclicker.com/docs/3.x/getting-started" class="nav-link px-2 text-muted" target="_blank">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-richtext" viewBox="0 0 16 16">
+                                 <path d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208zM5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"></path>
+                                 <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"></path>
+                              </svg>
+                              Docs
+                           </a>
+                        </li>
+                        <li class="nav-item">
+                           <a href="https://discord.gg/ubMBeX3" class="nav-link px-2 text-muted" target="_blank">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+                                 <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"></path>
+                              </svg>
+                              Chat
+                           </a>
+                        </li>
+                        <li class="nav-item">
+                           <a href="https://dev.getautoclicker.com/" class="nav-link px-2 text-muted" target="_blank" id="settings">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
+                              </svg>
+                              Advance
+                           </a>
+                        </li>
+                        <li class="nav-item">
+                           <a href="https://github.com/sponsors/Dhruv-Techapps" class="nav-link px-2 text-muted" target="_blank">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-balloon-heart text-danger" viewBox="0 0 16 16">
+                                 <path fill-rule="evenodd" d="m8 2.42-.717-.737c-1.13-1.161-3.243-.777-4.01.72-.35.685-.451 1.707.236 3.062C4.16 6.753 5.52 8.32 8 10.042c2.479-1.723 3.839-3.29 4.491-4.577.687-1.355.587-2.377.236-3.061-.767-1.498-2.88-1.882-4.01-.721L8 2.42Zm-.49 8.5c-10.78-7.44-3-13.155.359-10.063.045.041.089.084.132.129.043-.045.087-.088.132-.129 3.36-3.092 11.137 2.624.357 10.063l.235.468a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3.177 3.177 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.235-.468ZM6.013 2.06c-.649-.18-1.483.083-1.85.798-.131.258-.245.689-.08 1.335.063.244.414.198.487-.043.21-.697.627-1.447 1.359-1.692.217-.073.304-.337.084-.398Z"></path>
+                              </svg>
+                              Sponsors
+                           </a>
+                        </li>
+                     </ul>
+                  </footer>
+               </div>
+            </div>
+         </div>
+      </template>
+      <template id="auto-clicker-autofill-popup-tr">
+         <tr>
+            <td>
+               <div class="text-truncate"></div>
+            </td>
+            <td>
+               <div class="text-truncate"></div>
+            </td>
+            <td>
+               <button type="button" class="btn-close" data-bs-dismiss="tr" aria-label="Close"></button>
+            </td>
+         </tr>
+      </template>
+   </body>
+   <script>
+      fetch('/get_all_passenger')
+      .then(response => response.json())
+      .then(data => {
+         console.log(data)
+         const container = document.getElementById('recordTable');
+         const idsToCancel = [];
+
+         data.forEach(passenger => {
+            const date = new Date(passenger.date);
+            const currentDate = new Date();
+            const diffHours = Math.ceil((currentDate - date) / (1000 * 60 * 60));
+
+            if (passenger.status === 'hold' && diffHours > 3) {
+               idsToCancel.push(passenger.passenger_id);
+            }
+
+         });
+         console.log('idsToCancel', idsToCancel);
+         if (idsToCancel.length > 0) {
+            fetch('/cancel_passengers', {
+               method: 'POST',
+               headers: {
+               'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ passengerIds: idsToCancel }),
+            })
+            .then(response => response.json())
+            .then(data => {
+               console.log('Success:', data);
+            })
+            .catch((error) => {
+               console.error('Error:', error);
+            });
+         }
+         });
+   </script>
+   <script>
+    let actionToPerform;
+    let passengerIdToProcess;
+
+
+
+      fetch('/get_all_passenger')
+      .then(response => response.json())
+      .then(data => {
+
+         console.log(data)
+         const container = document.getElementById('recordTable');
+         const row = document.createElement('tbody');
+
+         data.forEach(passenger => {
+            const date = new Date(passenger.date_of_ticket);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+            const year = date.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            const dataRow = document.createElement('tr');
+            dataRow.setAttribute('id', `row_${passenger.passenger_id}`);
+
+            dataRow.innerHTML = `
+            <td scope="row">${passenger.passenger_id}</td>
+            <td>036501</td>
+            <td>${passenger.username}</td>
+            <td>${passenger.from_location} TO ${passenger.to_location} </td>
+            <td>
+               ${formattedDate} ${passenger.deptTime} <br>
+            </td>
+            <td>${passenger.passenger_type}</td>
+            <td>${passenger.date}</td>
+            <td style="text-align: center;">
+               <span><span class="badge badge-primary">${passenger.passenger_status}</span></span> <br> <span style="color: darkred;">Booking ${passenger.passenger_status}</span> 
+            </td>
+            <td>
+               <button class="btn btn-success approve-btn" id="approve-btn" data-passenger-id="${passenger.passenger_id}">Approve</button>
+               <button class="btn btn-danger reject-btn"  id="reject-btn" data-passenger-id="${passenger.passenger_id}">Reject</button>
+            </td>
+         </tr>`;
+          row.appendChild(dataRow);
+         });
+         console.log('row', row);
+         container.appendChild(row);
+      
+
+         document.querySelectorAll('.approve-btn').forEach(button => {
+            button.addEventListener('click', function() {
+            actionToPerform = 'approve';
+            passengerIdToProcess = this.getAttribute('data-passenger-id');
+            document.getElementById('confirmationMessage').textContent = 'Do you want to approve this complaint?';
+            $('#confirmationModal').modal('show');
+            });
+         });
+
+
+         document.querySelectorAll('.reject-btn').forEach(button => {
+  button.addEventListener('click', function() {               actionToPerform = 'reject';
+               passengerIdToProcess = this.getAttribute('data-passenger-id');
+               document.getElementById('confirmationMessage').textContent = 'Do you want to reject this complaint?';
+               $('#confirmationModal').modal('show');
+               });
+            });
+      
+      })
+      .catch(error => console.error('Error:', error));
+      document.getElementById('confirmButton').addEventListener('click', function() {
+         const url = actionToPerform === 'approve' ? '/approve_passenger' : '/reject_passenger';
+         fetch(url, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ passengerId: passengerIdToProcess }),
+         })
+         .then(response => response.json())
+         .then(data => {
+            if (data.success) {
+               // Update the UI to reflect the new status...
+               alert(`Passenger ${actionToPerform}d successfully`);
+               window.location.reload();
+            } else {
+               // Handle the error...
+               alert(`Failed to ${actionToPerform} passenger`);
+            }
+         })
+         .catch((error) => {
+            console.error('Error:', error);
+         });
+         });
+   </script>
+</html>

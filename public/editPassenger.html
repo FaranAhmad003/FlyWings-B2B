@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Passenger</title>
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function loadPassengerData() {
+            const passengerId = getQueryParam('passenger_id');
+            if (passengerId) {
+                fetch(`/api/getPassenger/${passengerId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('surname').value = data.surname || '';
+                        document.getElementById('given_name').value = data.given_name || '';
+                        document.getElementById('title').value = data.title || 'MR';
+                        document.getElementById('passport').value = data.passport_number || '';
+                        document.getElementById('dob').value = data.dob || '';
+                        document.getElementById('doe').value = data.doe || '';
+                    })
+                    .catch(error => console.error('Error fetching passenger data:', error));
+            } else {
+                console.error('No passenger_id found in the query parameters.');
+            }
+        }
+
+        function updatePassengerData() {
+            const passengerId = getQueryParam('passenger_id');
+            const passengerData = {
+                surname: document.getElementById('surname').value,
+                given_name: document.getElementById('given_name').value,
+                title: document.getElementById('title').value,
+                passport_number: document.getElementById('passport').value,
+                dob: document.getElementById('dob').value,
+                doe: document.getElementById('doe').value
+            };
+
+            fetch(`/api/editPassenger/${passengerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(passengerData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Passenger updated successfully!');
+                } else {
+                    alert('Failed to update passenger.');
+                }
+            })
+            .catch(error => console.error('Error updating passenger data:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPassengerData);
+    </script>
+</head>
+<body>
+    <h1>Edit Passenger</h1>
+    <div class="form-group row">
+        <div class="col-md-2">
+            <label for="surname" class="control-label">Surname</label>
+            <input type="text" id="surname" placeholder="e.g. M Arshad" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label for="given_name" class="control-label">Given Name</label>
+            <input type="text" id="given_name" placeholder="e.g. Ghafoor" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label for="title" class="control-label">Title</label>
+            <select id="title" class="form-control">
+                <option value="MR">MR.</option>
+                <option value="MRS">MRS.</option>
+                <option value="MS">MS.</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="passport" class="control-label">Passport #</label>
+            <input type="text" id="passport" maxlength="50" size="50" placeholder="e.g. FP1417751" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label for="dob" class="control-label">DOB (Birth)</label>
+            <input type="date" id="dob" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label for="doe" class="control-label">DOE (Expiry)</label>
+            <input type="date" id="doe" class="form-control">
+        </div>
+    </div>
+    <button type="button" onclick="updatePassengerData()">Update</button>
+</body>
+</html>
