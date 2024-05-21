@@ -1,466 +1,459 @@
-<!doctype html>
-<html lang="en">
+    <!doctype html>
+    <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
-    <title>Client | FlyWings Intl</title>
-    <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.png">
-    <!-- Styles -->
-    <link href="../css/app.css" rel="stylesheet">
-    <link href="../css/client.css" rel="stylesheet">
-    <link href="../select2/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .db-info-list {
-            background-color: #e9ecef;
-            display: flex;
-            -moz-align-items: center;
-            -ms-align-items: center;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
+        <title>Client | FlyWings Intl</title>
+        <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.png">
+        <!-- Styles -->
+        <link href="../css/app.css" rel="stylesheet">
+        <link href="../css/client.css" rel="stylesheet">
+        <link href="../select2/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <style>
+            .db-info-list {
+                background-color: #e9ecef;
+                display: flex;
+                -moz-align-items: center;
+                -ms-align-items: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
 
-        .dashboard-stat-icon i {
-            font-size: 30px;
-            display: inline-block;
-            float: left;
-            line-height: 80px;
-            height: 80px;
-            width: 80px;
-            text-align: center;
-        }
+            .dashboard-stat-icon i {
+                font-size: 30px;
+                display: inline-block;
+                float: left;
+                line-height: 80px;
+                height: 80px;
+                width: 80px;
+                text-align: center;
+            }
 
-        .bg-green {
-            background-color: #4caf50;
-            color: #fff;
-        }
+            .bg-green {
+                background-color: #4caf50;
+                color: #fff;
+            }
 
-        .bg-blue {
-            background-color: #167ee6;
-            color: #fff;
-        }
+            .bg-blue {
+                background-color: #167ee6;
+                color: #fff;
+            }
 
-        .bg-red {
-            background-color: #da0c4d;
-            color: #fff;
-        }
+            .bg-red {
+                background-color: #da0c4d;
+                color: #fff;
+            }
 
-        .dashboard-stat-content {
-            padding: 15px;
-        }
+            .dashboard-stat-content {
+                padding: 15px;
+            }
 
-        .dashboard-stat-content h4 {
-            margin-bottom: 5px;
-            font-size: inherit;
-            font-weight: 700;
-        }
+            .dashboard-stat-content h4 {
+                margin-bottom: 5px;
+                font-size: inherit;
+                font-weight: 700;
+            }
 
-        .dashboard-stat-content h5 {
-            margin-bottom: 0;
-            font-size: inherit;
-        }
-    </style>
-    <style>
-        .btn-group-sm>.btn,
-        .btn-sm {
-            padding: 0.1rem 0.3rem !important;
-            font-size: 0.775rem !important;
-        }
+            .dashboard-stat-content h5 {
+                margin-bottom: 0;
+                font-size: inherit;
+            }
+        </style>
+        <style>
+            .btn-group-sm>.btn,
+            .btn-sm {
+                padding: 0.1rem 0.3rem !important;
+                font-size: 0.775rem !important;
+            }
 
-        input[type=text].form-control {
-            text-transform: uppercase !important;
-        }
+            input[type=text].form-control {
+                text-transform: uppercase !important;
+            }
 
-        .select2-container {
-            width: 100% !important;
-        }
+            .select2-container {
+                width: 100% !important;
+            }
 
-        .select2-container .select2-selection--single {
-            height: calc(1.5em + 0.75rem + 2px);
-        }
+            .select2-container .select2-selection--single {
+                height: calc(1.5em + 0.75rem + 2px);
+            }
 
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 35px;
-        }
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 35px;
+            }
 
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 35px;
-            right: 4px;
-        }
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 35px;
+                right: 4px;
+            }
 
-        * {
-            box-sizing: border-box;
-        }
+            * {
+                box-sizing: border-box;
+            }
 
-        .image-container {
-            position: relative;
-            width: 100%;
-        }
+            .image-container {
+                position: relative;
+                width: 100%;
+            }
 
-        img.image {
-            display: block;
-            width: 100%;
-            height: auto;
-            border-radius: 10px 10px 0px 0px;
-        }
+            img.image {
+                display: block;
+                width: 100%;
+                height: auto;
+                border-radius: 10px 10px 0px 0px;
+            }
 
-        .image-container img {
-            transition: filter 0.3s ease;
-        }
+            .image-container img {
+                transition: filter 0.3s ease;
+            }
 
-        .image-container:hover,
-        img.image:hover {
-            padding: 0 !important;
-        }
+            .image-container:hover,
+            img.image:hover {
+                padding: 0 !important;
+            }
 
-        .image-container:hover img {
-            filter: brightness(70%);
-            /* Adjust this value as per your preference */
-        }
+            .image-container:hover img {
+                filter: brightness(70%);
+                /* Adjust this value as per your preference */
+            }
 
-        .image-container:hover~.image-container img {
-            filter: brightness(30%);
-            /* Adjust this value as per your preference */
-        }
+            .image-container:hover~.image-container img {
+                filter: brightness(30%);
+                /* Adjust this value as per your preference */
+            }
 
-        .overlay {
-            position: inherit;
-            background: rgb(49, 47, 47);
-            color: white;
-            width: 100%;
-            transition: .5s ease;
-            opacity: 1;
-            font-size: 20px;
-            padding: 10px;
-            text-align: center;
-            border-radius: 0px 0px 5px 5px;
-        }
+            .overlay {
+                position: inherit;
+                background: rgb(49, 47, 47);
+                color: white;
+                width: 100%;
+                transition: .5s ease;
+                opacity: 1;
+                font-size: 20px;
+                padding: 10px;
+                text-align: center;
+                border-radius: 0px 0px 5px 5px;
+            }
 
-        .image-container a,
-        .image-container a:hover,
-        .image-container a:visited,
-        .image-container a:focus,
-        .image-container a:active {
-            color: white;
-            text-decoration: none !important;
-        }
+            .image-container a,
+            .image-container a:hover,
+            .image-container a:visited,
+            .image-container a:focus,
+            .image-container a:active {
+                color: white;
+                text-decoration: none !important;
+            }
 
-        .image-container:hover .overlay {
-            font-weight: 700;
-            opacity: 1;
-            color: white;
-            background: rgb(49, 47, 36);
-        }
+            .image-container:hover .overlay {
+                font-weight: 700;
+                opacity: 1;
+                color: white;
+                background: rgb(49, 47, 36);
+            }
 
-        .logo {
-            width: 100%;
-            height: auto;
-            max-width: 200px;
-        }
-    </style>
-</head>
+            .logo {
+                width: 100%;
+                height: auto;
+                max-width: 200px;
+            }
+        </style>
+    </head>
 
-<body>
-    <div id="app">
-        <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand">Client Portal</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+    <body>
+        <div id="app">
+            <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand">Client Portal</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link">New Booking</a>
+                            </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/client">New Booking</a>
-                        </li>
-                     <li class="nav-item">
-        <a id="myBookingsLink" class="nav-link">My Bookings</a>
-      </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/client/bank">Banks</a>
-                        </li>
-                        <li class="nav-item">
-                        </li>
-                        <li class="nav-item">
+            <a id="myBookingsLink" class="nav-link">My Bookings</a>
+        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/client/bank">Banks</a>
+                            </li>
+                            <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
 
-                        </li>
-                    </ul>
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                FLY WINGS INTERNATIOAL <span class="caret"></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="https://travelnetwork.pk" target="_blank">Visit Site</a>
-                                <a class="dropdown-item" href="https://travelnetwork.pk/logout"
-                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                    Logout
+                            </li>
+                        </ul>
+                        <!-- Right Side Of Navbar -->
+    <ul class="navbar-nav ml-auto">
+        <!-- Authentication Links -->
+        <li class="nav-item dropdown">
+           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button"
+   aria-expanded="false" v-pre>
+   <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+</a>
+
+        </li>
+    </ul>
+
+                    </div>
+                </div>
+            </nav>
+
+            <main class="py-4" style="width: 90%; margin: auto;">
+                <div id="new_booking" class="container">
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <select name="airline_id" id="airline_id" class="form-control v-select" @input="updateUrl()">
+                                <option value="0">All Airlines</option>
+                                <option value="30">01. AIR ARABIA LYP-AUH</option>
+                                <option value="23">02. AIR ARABIA LYP-SHJ</option>
+                                <option value="37">03. AIR ARABIA MUX-SHJ</option>
+                                <option value="40">04. AIR ARABIA SKT-SHJ</option>
+                                <option value="56">05. FLY JINNAH LHE-SHJ</option>
+                                <option value="5">06. SERENE AIR LHE-DXB</option>
+                                <option value="48">07. FLY JINNAH ISB-SHJ</option>
+                                <option value="25">08. SERENE AIR ISB-SHJ</option>
+                                <option value="20">09. SERENE AIR ISB-DXB</option>
+                                <option value="58">10. FLY JINNAH SHJ-ISB</option>
+                                <option value="52">11. AIRSIAL LHE-MCT</option>
+                                <option value="51">12. AIRSIAL ISB-MCT</option>
+                                <option value="60">21. SERENE AIR ISB-JED</option>
+                                <option value="24">22. SERENE AIR LHE-JED</option>
+                                <option value="61">23. SERENE AIR PEW-JED</option>
+                                <option value="21">24. SERENE AIR ISB-RUH</option>
+                                <option value="38">25. JAZEERA AIRWAYS ISB-RUH</option>
+                                <option value="10">26. SAUDI AIRLINE LHE-RUH</option>
+                                <option value="36">27. FLYNAS LHE-RUH</option>
+                                <option value="33">28. SERENE AIR PEW-RUH</option>
+                                <option value="8">29. GULF AIR LYP-RUH</option>
+                                <option value="49">30. FLYNAS LHE-DMM</option>
+                                <option value="27">31. AIRSIAL LHE-DMM</option>
+                                <option value="35">32. AIRSIAL ISB-DMM</option>
+                                <option value="13">41. SAUDI AIRLINE UMRAH LHE</option>
+                                <option value="15">42. SAUDI AIRLINE UMRAH MUX</option>
+                                <option value="50">43. SAUDI AIRLINE UMRAH ISB</option>
+                                <option value="41">44. SERENE AIR UMRAH ISB</option>
+                                <option value="16">45. SERENE AIR UMRAH LHE</option>
+                                <option value="59">46. SERENE AIR UMRAH PEW</option>
+                                <option value="39">AIR ARABIA LHE-RKT</option>
+                                <option value="29">AIR ARABIA LHE-RKT-JED</option>
+                                <option value="28">AIR ARABIA LYP-JED</option>
+                                <option value="19">AIRBLUE UMRAH</option>
+                                <option value="22">AIRSIAL UMRAH MUX</option>
+                                <option value="46">EMIRATES AIRLINE ISB-LHR</option>
+                                <option value="55">FLY JINNAH ISB-SHJ-DMM</option>
+                                <option value="53">FLY JINNAH ISB-SHJ-JED</option>
+                                <option value="54">FLY JINNAH ISB-SHJ-MED</option>
+                                <option value="57">FLY JINNAH UMRAH ISB</option>
+                                <option value="1">FLYDUBAI DXB</option>
+                                <option value="3">FLYDUBAI RUH</option>
+                                <option value="14">FLYDUBAI UMRAH</option>
+                                <option value="17">GULF AIR UMRAH LYP</option>
+                                <option value="31">JAZEERA AIRWAYS LHE-RUH</option>
+                                <option value="18">JAZEERA AIRWAYS UMRAH LHE</option>
+                                <option value="42">QATAR AIRWAYS LHE-LHR</option>
+                                <option value="43">QATAR AIRWAYS LHE-MAN</option>
+                                <option value="47">SAUDI AIRLINE ISB-LHR</option>
+                                <option value="34">SAUDI AIRLINE ISB-RUH</option>
+                                <option value="26">SAUDI AIRLINE LHE-JED</option>
+                                <option value="32">SAUDI AIRLINE LHE-LHR</option>
+                                <option value="9">SAUDI AIRLINE MUX-JED</option>
+                                <option value="6">SERENE AIR LHE-SHJ</option>
+                                <option value="44">TURKISH AIRLINE ISB-LHR</option>
+                                <option value="45">TURKISH AIRLINE ISB-MAN</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-md-6">
+                            <div class="image-container">
+                                <a href="/public/client.html?group=uae">
+                                    <img src="/assets/UAE.jpeg" alt="UAE"
+                                        class="image">
+                                    <div class="overlay">UAE GROUPS</div>
                                 </a>
-
-                                <form id="logout-form" action="https://travelnetwork.pk/logout" method="POST"
-                                    style="display: none;">
-                                    <input type="hidden" name="_token" value="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
-                                </form>
                             </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4" style="width: 90%; margin: auto;">
-            <div id="new_booking" class="container">
-                <div class="row justify-content-center mb-2">
-                    <div class="col-md-6">
-
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <select name="airline_id" id="airline_id" class="form-control v-select" @input="updateUrl()">
-                            <option value="0">All Airlines</option>
-                            <option value="30">01. AIR ARABIA LYP-AUH</option>
-                            <option value="23">02. AIR ARABIA LYP-SHJ</option>
-                            <option value="37">03. AIR ARABIA MUX-SHJ</option>
-                            <option value="40">04. AIR ARABIA SKT-SHJ</option>
-                            <option value="56">05. FLY JINNAH LHE-SHJ</option>
-                            <option value="5">06. SERENE AIR LHE-DXB</option>
-                            <option value="48">07. FLY JINNAH ISB-SHJ</option>
-                            <option value="25">08. SERENE AIR ISB-SHJ</option>
-                            <option value="20">09. SERENE AIR ISB-DXB</option>
-                            <option value="58">10. FLY JINNAH SHJ-ISB</option>
-                            <option value="52">11. AIRSIAL LHE-MCT</option>
-                            <option value="51">12. AIRSIAL ISB-MCT</option>
-                            <option value="60">21. SERENE AIR ISB-JED</option>
-                            <option value="24">22. SERENE AIR LHE-JED</option>
-                            <option value="61">23. SERENE AIR PEW-JED</option>
-                            <option value="21">24. SERENE AIR ISB-RUH</option>
-                            <option value="38">25. JAZEERA AIRWAYS ISB-RUH</option>
-                            <option value="10">26. SAUDI AIRLINE LHE-RUH</option>
-                            <option value="36">27. FLYNAS LHE-RUH</option>
-                            <option value="33">28. SERENE AIR PEW-RUH</option>
-                            <option value="8">29. GULF AIR LYP-RUH</option>
-                            <option value="49">30. FLYNAS LHE-DMM</option>
-                            <option value="27">31. AIRSIAL LHE-DMM</option>
-                            <option value="35">32. AIRSIAL ISB-DMM</option>
-                            <option value="13">41. SAUDI AIRLINE UMRAH LHE</option>
-                            <option value="15">42. SAUDI AIRLINE UMRAH MUX</option>
-                            <option value="50">43. SAUDI AIRLINE UMRAH ISB</option>
-                            <option value="41">44. SERENE AIR UMRAH ISB</option>
-                            <option value="16">45. SERENE AIR UMRAH LHE</option>
-                            <option value="59">46. SERENE AIR UMRAH PEW</option>
-                            <option value="39">AIR ARABIA LHE-RKT</option>
-                            <option value="29">AIR ARABIA LHE-RKT-JED</option>
-                            <option value="28">AIR ARABIA LYP-JED</option>
-                            <option value="19">AIRBLUE UMRAH</option>
-                            <option value="22">AIRSIAL UMRAH MUX</option>
-                            <option value="46">EMIRATES AIRLINE ISB-LHR</option>
-                            <option value="55">FLY JINNAH ISB-SHJ-DMM</option>
-                            <option value="53">FLY JINNAH ISB-SHJ-JED</option>
-                            <option value="54">FLY JINNAH ISB-SHJ-MED</option>
-                            <option value="57">FLY JINNAH UMRAH ISB</option>
-                            <option value="1">FLYDUBAI DXB</option>
-                            <option value="3">FLYDUBAI RUH</option>
-                            <option value="14">FLYDUBAI UMRAH</option>
-                            <option value="17">GULF AIR UMRAH LYP</option>
-                            <option value="31">JAZEERA AIRWAYS LHE-RUH</option>
-                            <option value="18">JAZEERA AIRWAYS UMRAH LHE</option>
-                            <option value="42">QATAR AIRWAYS LHE-LHR</option>
-                            <option value="43">QATAR AIRWAYS LHE-MAN</option>
-                            <option value="47">SAUDI AIRLINE ISB-LHR</option>
-                            <option value="34">SAUDI AIRLINE ISB-RUH</option>
-                            <option value="26">SAUDI AIRLINE LHE-JED</option>
-                            <option value="32">SAUDI AIRLINE LHE-LHR</option>
-                            <option value="9">SAUDI AIRLINE MUX-JED</option>
-                            <option value="6">SERENE AIR LHE-SHJ</option>
-                            <option value="44">TURKISH AIRLINE ISB-LHR</option>
-                            <option value="45">TURKISH AIRLINE ISB-MAN</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row justify-content-center mb-2">
-                    <div class="col-md-6">
-                        <div class="image-container">
-                            <a href="/public/client.html?group=uae">
-                                <img src="/assets/UAE.jpeg" alt="UAE"
-                                    class="image">
-                                <div class="overlay">UAE GROUPS</div>
-                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="image-container">
+                                <a href="/public/client.html?group=ksa">
+                                    <img src="/assets/KSA.jpeg" alt="KSA"
+                                        class="image">
+                                    <div class="overlay">KSA ONEWAY GROUPS</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="image-container">
-                            <a href="/public/client.html?group=ksa">
-                                <img src="/assets/KSA.jpeg" alt="KSA"
-                                    class="image">
-                                <div class="overlay">KSA ONEWAY GROUPS</div>
-                            </a>
+                    <div class="row justify-content-center mb-2">
+                        <div class="col-md-6">
+                            <div class="image-container">
+                                <a href="/public/client.html?group=umrah">
+                                    <img src="/assets/oman.jpeg" alt="UMRAH"
+                                        class="image">
+                                    <div class="overlay">OMAN MASCAT</div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="image-container">
+                                <a href="/public/client.html?group=all">
+                                    <img src="/assets/all.jpeg" alt="ALL"
+                                        class="image">
+                                    <div class="overlay">ALL GROUPS</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center mb-2">
-                    <div class="col-md-6">
-                        <div class="image-container">
-                            <a href="/public/client.html?group=umrah">
-                                <img src="/assets/oman.jpeg" alt="UMRAH"
-                                    class="image">
-                                <div class="overlay">OMAN MASCAT</div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="image-container">
-                            <a href="/public/client.html?group=all">
-                                <img src="/assets/all.jpeg" alt="ALL"
-                                    class="image">
-                                <div class="overlay">ALL GROUPS</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <div class="modal fade" id="modalInfo" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">IMPORTANT NOTICE!</h4>
-                        <!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                    </div>
-                    <div class="modal-body">
-                        <p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="okButton" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modalFeedbackLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <form class="form-horizontal" method="POST" action="https://travelnetwork.pk/admin/feedbacks/store">
+            </main>
+            <div class="modal fade" id="modalInfo" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Submit your feedback!</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">IMPORTANT NOTICE!</h4>
+                            <!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" name="_token" value="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
-                            <div class="form-group">
-                                <label for="title" class="col-form-label">Title</label>
-                                <input id="title" type="text" class="form-control" name="title" value=""
-                                    placeholder="e.g. Very Happy" autofocus>
-                            </div>
-                            <div class="form-group">
-                                <label for="value" class="col-form-label">Message</label>
-                                <textarea id="value" type="text" class="form-control" name="message"
-                                    placeholder="e.g We are facing some issue or you like over service."
-                                    required></textarea>
-                            </div>
+                            <p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-outline-success">Submit</button>
+                            <button type="button" class="btn btn-secondary" id="okButton" data-dismiss="modal">OK</button>
                         </div>
-                    </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-feedback" tabindex="-1" role="dialog" aria-labelledby="modalFeedbackLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form class="form-horizontal" method="POST" action="https://travelnetwork.pk/admin/feedbacks/store">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Submit your feedback!</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="_token" value="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
+                                <div class="form-group">
+                                    <label for="title" class="col-form-label">Title</label>
+                                    <input id="title" type="text" class="form-control" name="title" value=""
+                                        placeholder="e.g. Very Happy" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="value" class="col-form-label">Message</label>
+                                    <textarea id="value" type="text" class="form-control" name="message"
+                                        placeholder="e.g We are facing some issue or you like over service."
+                                        required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-outline-success">Submit</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Main Script File -->
-    <script src="../js/app.js"></script>
-    <script src="../select2/js/select2.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let show = ['/admin', '/admin/new/booking'].includes(window.location.pathname);
-            // Check if the popup should be displayed
-            if (show && (!getCookie("popupClosed") || has24HoursPassed())) {
-                displayPopup();
-            }
+        <!-- Main Script File -->
+        <script src="../js/app.js"></script>
+        <script src="../select2/js/select2.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let show = ['/admin', '/admin/new/booking'].includes(window.location.pathname);
+                // Check if the popup should be displayed
+                if (show && (!getCookie("popupClosed") || has24HoursPassed())) {
+                    displayPopup();
+                }
 
-            // Add event listener to the OK button
-            document.getElementById("okButton").addEventListener("click", function () {
-                hidePopup();
-                setCookie("popupClosed", "true", 1); // Set cookie to expire in 1 day
-                setCookie("lastHiddenTime", new Date().getTime(), 1); // Set cookie to expire in 1 day
-            });
-        });
-
-        function displayPopup() {
-            $('#modalInfo').modal({ backdrop: 'static', keyboard: false });
-        }
-
-        function hidePopup() {
-            $('#modalInfo').modal("hide");
-        }
-
-        function has24HoursPassed() {
-            const lastHiddenTime = parseInt(getCookie("lastHiddenTime")) || 0;
-            const currentTime = new Date().getTime();
-            return currentTime - lastHiddenTime > 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-        }
-
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        $(window).on('load', function () {
-            $('.select2').select2({
-                placeholder: "choose an item from dropdown",
-                allowClear: false,
+                // Add event listener to the OK button
+                document.getElementById("okButton").addEventListener("click", function () {
+                    hidePopup();
+                    setCookie("popupClosed", "true", 1); // Set cookie to expire in 1 day
+                    setCookie("lastHiddenTime", new Date().getTime(), 1); // Set cookie to expire in 1 day
+                });
             });
 
+            function displayPopup() {
+                $('#modalInfo').modal({ backdrop: 'static', keyboard: false });
+            }
+
+            function hidePopup() {
+                $('#modalInfo').modal("hide");
+            }
+
+            function has24HoursPassed() {
+                const lastHiddenTime = parseInt(getCookie("lastHiddenTime")) || 0;
+                const currentTime = new Date().getTime();
+                return currentTime - lastHiddenTime > 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+            }
+
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + value + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            $(window).on('load', function () {
+                $('.select2').select2({
+                    placeholder: "choose an item from dropdown",
+                    allowClear: false,
+                });
+
+            });
+        </script>
+        <script>
+            let old_airline_id = $('#airline_id').val();
+            function updateUrl() {
+                let airline_id = $('#airline_id').val();
+                window.location.href = 'https://travelnetwork.pk/admin/booking/groups?type=0&airline_id=' + airline_id;
+
+                $('#new_booking a[href]').each(function () {
+                    const oldUrl = $(this).attr("href");
+                    const newUrl = oldUrl.replace("airline_id=" + old_airline_id, "airline_id=" + airline_id);
+                    $(this).attr("href", newUrl);
+                });
+                old_airline_id = airline_id
+            }
+        </script>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        if (userId) {
+            const myBookingsLink = document.getElementById('myBookingsLink');
+            myBookingsLink.href = `/client/myBooking?userId=${userId}`;
+        }
         });
     </script>
-    <script>
-        let old_airline_id = $('#airline_id').val();
-        function updateUrl() {
-            let airline_id = $('#airline_id').val();
-            window.location.href = 'https://travelnetwork.pk/admin/booking/groups?type=0&airline_id=' + airline_id;
+    </body>
 
-            $('#new_booking a[href]').each(function () {
-                const oldUrl = $(this).attr("href");
-                const newUrl = oldUrl.replace("airline_id=" + old_airline_id, "airline_id=" + airline_id);
-                $(this).attr("href", newUrl);
-            });
-            old_airline_id = airline_id
-        }
-    </script>
-     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const userId = urlParams.get('userId');
-      if (userId) {
-        const myBookingsLink = document.getElementById('myBookingsLink');
-        myBookingsLink.href = `/client/myBooking?userId=${userId}`;
-      }
-    });
-  </script>
-</body>
-
-</html>
+    </html>

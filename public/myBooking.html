@@ -35,7 +35,9 @@ td:hover .btn {
               
                <div id="navbarSupportedContent" class="collapse navbar-collapse">
                   <ul class="navbar-nav mr-auto">
-                     <li class="nav-item"><a href="/client" class="nav-link">New Booking</a></li>
+                      <li class="nav-item">
+                            <a id="newBookingLink" class="nav-link">New Booking</a>
+                        </li>
                      <li class="nav-item"><a href="" class="nav-link">My Bookings</a></li>
                      <li class="nav-item"><a href="/client/bank" class="nav-link">Banks</a></li>
                     
@@ -404,18 +406,25 @@ dataRow.innerHTML =
         <span><span class="badge badge-primary">${passenger.passenger_status}</span></span> <br> 
         <span style="color: darkred;">Booking ${passenger.passenger_status}</span>
     </td>
-    <td>
-        ${(passenger.passenger_status !== 'approved' && passenger.passenger_status !== 'rejected' && passenger.passenger_status !== 'cancelled') ? 
-        `<button type="button" onclick="window.location.href='/public/editPassenger.html?passenger_id=${passenger.passenger_id}'">
-            <img src="/images/edit.png" alt="Edit Icon" width="16" height="16">
-        </button>` 
-        : ''}
-        ${(passenger.passenger_status === 'approved') ? 
-        `<button type="button" onclick="window.location.href='/public/printingTicket.html?passenger_id=${passenger.passenger_id}'">
-            <img src="/images/printing.png" alt="Print Icon" width="16" height="16">
-        </button>` 
-        : ''}
-    </td>`;
+<td>
+    ${(passenger.passenger_status !== 'approved' && passenger.passenger_status !== 'rejected' && passenger.passenger_status !== 'cancelled') ? 
+    `<button type="button" onclick="window.location.href='/public/editPassenger.html?passenger_id=${passenger.passenger_id}'">
+        <img src="/images/edit.png" alt="Edit Icon" width="16" height="16">
+    </button>`
+    : ''}
+    ${(passenger.passenger_status === 'hold') ? 
+    `<div style="display: inline-block; background-color: orange; color: black; padding: 5px 5px; margin-left: 10px; border-radius: 5px; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);">3 hours left</div>` 
+    : ''}
+    ${(passenger.passenger_status === 'approved') ? 
+    `<button type="button" onclick="window.location.href='/public/printingTicket.html?passenger_id=${passenger.passenger_id}'">
+        <img src="/images/printing.png" alt="Print Icon" width="16" height="16">
+    </button>` 
+    : ''}
+</td>
+
+
+
+`;
 
 
 
@@ -425,5 +434,17 @@ dataRow.innerHTML =
          console.log('row', row);
          container.appendChild(row);   
       })
+      document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+         if (userId) {
+                document.getElementById('newBookingLink').href = `/client?userId=${userId}`;
+                document.getElementById('myBookingsLink').href = `/client/myBooking?userId=${userId}`;
+                document.getElementById('bank').href = `/client?userId=${userId}`;
+                document.getElementById('bank').href = `/client/bank?userId=${userId}`;
+            }
+
+         }
+      );
    </script>
 </html>

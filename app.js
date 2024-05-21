@@ -230,7 +230,7 @@ app.get("/client", (req, res) => {
 });
 
 app.get("/client/bank", (req, res) => {
-  const filePath = path.join(__dirname, "public", "bank.html");
+  const filePath = path.join(__dirname, "public", "bankclient.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
       res.status(500).send("Failed to load the bank page.");

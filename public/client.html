@@ -102,23 +102,21 @@
 					<a href="/client" class="navbar-brand">Client Panel</a> <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button> 
 					<div id="navbarSupportedContent" class="collapse navbar-collapse">
 						<ul class="navbar-nav mr-auto">
-							<li class="nav-item"><a href="/client" class="nav-link">New Booking</a></li>
+							<li class="nav-item"><a href="/client?userid" class="nav-link">New Booking</a></li>
 							<li class="nav-item"><a class="nav-link"
                                        href="../public/myBooking.html">My Bookings</a></li>
 							<li class="nav-item"><a href="/client/bank" class="nav-link">Banks</a></li>
 						</ul>
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item dropdown">
-								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								FLY WINGS INTERNATIOAL <span class="caret"></span></a> 
-								<div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
-									<a href="https://travelnetwork.pk" target="_blank" class="dropdown-item">Visit Site</a> <a href="https://travelnetwork.pk/logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="dropdown-item">
-									Logout
-									</a> 
-									<form id="logout-form" action="https://travelnetwork.pk/logout" method="POST" style="display: none;"><input type="hidden" name="_token" value="hfVmAjWUFMxmhttpgIcJSXibM1cVLyDMvS87HC7j"></form>
-								</div>
-							</li>
-						</ul>
+    <ul class="navbar-nav ml-auto">
+        <!-- Authentication Links -->
+        <li class="nav-item dropdown">
+           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button"
+   aria-expanded="false" v-pre>
+   <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+</a>
+
+        </li>
+    </ul>
 					</div>
 				</div>
 			</nav>
@@ -396,7 +394,7 @@
     <div class="navbar">
         <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/admin">Admin Panel</a>
+                <a class="navbar-brand">Client Panel</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -410,11 +408,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/admin/bank">Banks</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="">My Ledger</a>
-                        <li class="nav-item">
-                        </li>
+                        
                     </ul>
+					
             </div>
     </div>
     </nav>
@@ -864,7 +860,7 @@ $(document).ready(function(){
             const row = document.createElement('tbody');
             row.innerHTML = `<thead data-v-62498c33="">
             <tr data-v-62498c33="">
-                <th data-v-62498c33="" colspan="6" style="text-align: center;"><img data-v-62498c33="" src="/storage/airlines/1693054243.png" alt="01. AIR ARABIA LYP-AUH" style="width: 150px; vertical-align: middle;"> <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.to_location} TO ${ticket.from_location}</span></th>
+                <th data-v-62498c33="" colspan="6" style="text-align: center;"><img data-v-62498c33="" src="/storage/airlines/1693054243.png" alt="01. AIR ARABIA LYP-AUH" style="width: 150px; vertical-align: middle;"> <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.from_location} TO ${ticket.to_location}</span></th>
             </tr>
             <tr data-v-62498c33="" class="thead-dark">
                 <th data-v-62498c33="" scope="col">DATE</th>
@@ -1002,4 +998,10 @@ $(document).ready(function(){
           container.appendChild(additionalHTML);
   });
   </script>
+  <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+        });
+    </script>
 </html>
