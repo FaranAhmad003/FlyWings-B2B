@@ -222,7 +222,269 @@
 							<h4 class="modal-title">IMPORTANT NOTICE!</h4>
 						</div>
 						<div class="modal-body">
-							<p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
+			<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Network Admin Panel</title>
+    <link href="../css/app.css" rel="stylesheet">
+    <link href="../css/client.css" rel="stylesheet">
+    <link href="../select2/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+        }
+
+        header img {
+            width: 150px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        /*
+        nav {
+            background-color: #e0e0e0;
+            padding: 10px 20px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-menu li {
+            margin-right: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: black;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+        */
+
+
+        /* Style the admin panel section */
+        .admin-panel {
+
+            padding: 20px;
+        }
+
+        .admin-panel h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .banks {
+            margin-bottom: 20px;
+        }
+
+        .banks table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .banks th,
+        .banks td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            color: black;
+        }
+
+        .banks th {
+            background-color: gray;
+        }
+
+        .other-sections {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .other-sections a {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .admin-panel {
+            color: #fff;
+            font-size: 24px;
+        }
+
+        form {
+            background-color: gray;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid grey;
+            padding: 12px;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        th {
+            background-color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/admin">Admin Panel</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../public/allBooking.html">Manage Booking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/bank">Banks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">My Ledger</a>
+                        <li class="nav-item">
+                        </li>
+                    </ul>
+            </div>
+    </div>
+    </nav>
+    </div>
+    <header>
+        <div class="header-container">
+            <h2>Banks</h2>
+        </div>
+        </div>
+    </header>
+    <main>
+        <div class="admin-panel">
+            <div class="banks">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sr#</th>
+                            <th>Bank</th>
+                            <th>Title</th>
+                            <th>Account No</th>
+                            <th>IBAN No</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Bank Alfalah</td>
+                            <td>FLY WINGS INTERNATIONAL</td>
+                            <td>5652-5000943556</td>
+                            <td>PK31ALFH5652005000943556</td>
+                            <td>High Street, Sahiwal</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>JS Bank</td>
+                            <td>FLY WINGS INTERNATIONAL</td>
+                            <td>9028-205304</td>
+                            <td>PK09JSBL9028000000205304</td>
+                            <td>High Street, Sahiwal</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>UBL Bank</td>
+                            <td>TARIQ SALEEM</td>
+                            <td>0391-206955045</td>
+                            <td>PK16UNIL0109000206955045</td>
+                            <td>High Street, Sahiwal</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Standard Charted</td>
+                            <td>TARIQ SALEEM</td>
+                            <td>01033676401</td>
+                            <td>PK42SCBL0000001033676401</td>
+                            <td>High Street, Sahiwal</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>HBL Bank</td>
+                            <td>MUHAMMAD AYUB</td>
+                            <td>1651-7914510303</td>
+                            <td>PK46HABB0016517914510303</td>
+                            <td>High Street, Sahiwal</td>
+                        </tr>
+
+                        </tbody>
+                        </table>
+                        </div></div></main></body></html>				<p>PLEASE ONCE REFRESH YOUR PAGE BEFORE CREATING NEW BOOKING TO CHECK ANY CHANGE IN FARE.</p>
 						</div>
 						<div class="modal-footer"><button type="button" id="okButton" data-dismiss="modal" class="btn btn-secondary">OK</button></div>
 					</div>
