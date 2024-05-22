@@ -186,7 +186,7 @@
             <a id="myBookingsLink" class="nav-link">My Bookings</a>
         </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/client/bank">Banks</a>
+                                <a id="bankLink" class="nav-link">Banks</a>
                             </li>
                             <li class="nav-item">
                             </li>
@@ -197,13 +197,14 @@
                         <!-- Right Side Of Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
-        <li class="nav-item dropdown">
-           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button"
-   aria-expanded="false" v-pre>
-   <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
-</a>
+<li class="nav-item dropdown">
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+        <span id="usernameDisplay"></span> <!-- Username display element -->
+        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+    </a>
+</li>
 
-        </li>
+
     </ul>
 
                     </div>
@@ -278,46 +279,42 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row justify-content-center mb-2">
-                        <div class="col-md-6">
-                            <div class="image-container">
-                                <a href="/public/client.html?group=uae">
-                                    <img src="/assets/UAE.jpeg" alt="UAE"
-                                        class="image">
-                                    <div class="overlay">UAE GROUPS</div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="image-container">
-                                <a href="/public/client.html?group=ksa">
-                                    <img src="/assets/KSA.jpeg" alt="KSA"
-                                        class="image">
-                                    <div class="overlay">KSA ONEWAY GROUPS</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center mb-2">
-                        <div class="col-md-6">
-                            <div class="image-container">
-                                <a href="/public/client.html?group=umrah">
-                                    <img src="/assets/oman.jpeg" alt="UMRAH"
-                                        class="image">
-                                    <div class="overlay">OMAN MASCAT</div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="image-container">
-                                <a href="/public/client.html?group=all">
-                                    <img src="/assets/all.jpeg" alt="ALL"
-                                        class="image">
-                                    <div class="overlay">ALL GROUPS</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+<div class="row justify-content-center mb-2">
+    <div class="col-md-6">
+        <div class="image-container">
+            <a href="/public/client.html?group=uae">
+                <img src="/assets/UAE.jpeg" alt="UAE" class="image">
+                <div class="overlay">UAE GROUPS</div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="image-container">
+            <a href="/public/client.html?group=ksa">
+                <img src="/assets/KSA.jpeg" alt="KSA" class="image">
+                <div class="overlay">KSA ONEWAY GROUPS</div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-2">
+    <div class="col-md-6">
+        <div class="image-container">
+            <a href="/public/client.html?group=umrah">
+                <img src="/assets/oman.jpeg" alt="UMRAH" class="image">
+                <div class="overlay">OMAN MASCAT</div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="image-container">
+            <a href="/public/client.html?group=all">
+                <img src="/assets/all.jpeg" alt="ALL" class="image">
+                <div class="overlay">ALL GROUPS</div>
+            </a>
+        </div>
+    </div>
+</div>
                 </div>
             </main>
             <div class="modal fade" id="modalInfo" tabindex="-1" aria-hidden="true">
@@ -340,7 +337,6 @@
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form class="form-horizontal" method="POST" action="https://travelnetwork.pk/admin/feedbacks/store">
                             <div class="modal-header">
                                 <h4 class="modal-title">Submit your feedback!</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -421,7 +417,6 @@
                 }
                 return null;
             }
-
             $(window).on('load', function () {
                 $('.select2').select2({
                     placeholder: "choose an item from dropdown",
@@ -430,30 +425,40 @@
 
             });
         </script>
-        <script>
-            let old_airline_id = $('#airline_id').val();
-            function updateUrl() {
-                let airline_id = $('#airline_id').val();
-                window.location.href = 'https://travelnetwork.pk/admin/booking/groups?type=0&airline_id=' + airline_id;
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('userId');
+    if (userId) {
+        const myBookingsLink = document.getElementById('myBookingsLink');
+        const bankLink = document.getElementById('bankLink');
+        myBookingsLink.href = `/client/myBooking?userId=${userId}`;
+        bankLink.href = `/client/bank?userId=${userId}`;
+        
+        // Fetch the username from the server
+        fetch(`/api/username?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.username) {
+                    // Display the username on the screen
+                    const usernameDisplay = document.getElementById('usernameDisplay');
+                    usernameDisplay.textContent = data.username;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching username:', error);
+            });
 
-                $('#new_booking a[href]').each(function () {
-                    const oldUrl = $(this).attr("href");
-                    const newUrl = oldUrl.replace("airline_id=" + old_airline_id, "airline_id=" + airline_id);
-                    $(this).attr("href", newUrl);
-                });
-                old_airline_id = airline_id
-            }
-        </script>
-        <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('userId');
-        if (userId) {
-            const myBookingsLink = document.getElementById('myBookingsLink');
-            myBookingsLink.href = `/client/myBooking?userId=${userId}`;
-        }
+        // Add userId to multiple links
+        const groupLinks = document.querySelectorAll('.image-container a');
+        groupLinks.forEach(link => {
+            const href = new URL(link.href);
+            href.searchParams.set('userId', userId);
+            link.href = href.toString();
         });
-    </script>
+    }
+});
+</script>
     </body>
 
     </html>

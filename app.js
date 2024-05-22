@@ -55,6 +55,10 @@ app.get("/", (req, res) => {
 app.get("/signup", (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
+app.get("/admin/ledger", (req, res) => {
+  res.sendFile(__dirname + "/public/ledger.html");
+});
+
 // Route to print the entire 'user' table
 app.get("/printTable", (req, res) => {
   connection.query("SELECT * FROM user", (err, results) => {
@@ -148,20 +152,20 @@ app.get("/tickets", (req, res) => {
   console.log("Username:", username);
   const group = req.query.group;
   let query; // Declare query variable outside the if-else statements
-  if (group === "uae") {
-    query =
-      'SELECT * FROM tickets WHERE to_location IN ("Dubai", "Abu Dhabi", "Sharjah", "Ras al-Khaimah", "Muscat") AND no_of_tickets > 0';
-  } else if (group === "ksa") {
-    query =
-      'SELECT * FROM tickets WHERE to_location IN ("Muscat", "Salalah", "Sohar", "Duqm", "Khasab", "Musandam", "Nizwa", "Sur", "Masirah", "Buraimi", "Ibri", "Rustaq", "Thumrait", "Marmul", "Fahud", "Qarn Alam", "Mukhaizna", "Jaaluni", "Adam") AND no_of_tickets > 0';
-  } else if (group === "umrah") {
-    query =
-      'SELECT * FROM tickets WHERE to_location IN ("Riyadh", "Jeddah", "Dammam", "Medina", "Abha", "Tabuk", "Taif", "Qassim", "Yanbu", "Hail") AND no_of_tickets > 0';
-  } else if (group === "all") {
-    query = "SELECT * FROM tickets";
-  } else {
-    return res.status(400).json({ error: "Invalid group" });
-  }
+if (group === "uae") {
+  query =
+    'SELECT * FROM tickets WHERE to_location IN ("Dubai", "Abu Dhabi", "Sharjah", "Ras al-Khaimah", "Muscat") AND no_of_tickets > 0 AND ticket_status = "active"';
+} else if (group === "ksa") {
+  query =
+    'SELECT * FROM tickets WHERE to_location IN ("Muscat", "Salalah", "Sohar", "Duqm", "Khasab", "Musandam", "Nizwa", "Sur", "Masirah", "Buraimi", "Ibri", "Rustaq", "Thumrait", "Marmul", "Fahud", "Qarn Alam", "Mukhaizna", "Jaaluni", "Adam") AND no_of_tickets > 0 AND ticket_status = "active"';
+} else if (group === "umrah") {
+  query =
+    'SELECT * FROM tickets WHERE to_location IN ("Riyadh", "Jeddah", "Dammam", "Medina", "Abha", "Tabuk", "Taif", "Qassim", "Yanbu", "Hail") AND no_of_tickets > 0 AND ticket_status = "active"';
+} else if (group === "all") {
+  query = 'SELECT * FROM tickets WHERE ticket_status = "active"';
+} else {
+  return res.status(400).json({ error: "Invalid group" });
+}
   connection.query(query, [username], (err, results) => {
     if (err) {
       console.error("Error fetching tickets:", err);
@@ -321,10 +325,26 @@ app.get("/forgotPassword", (req, res) => {
 app.get("/otpVerification", (req, res) => {
   res.sendFile(__dirname + "/public/otpVerification.html");
 });
-app.get("/allBooking", (req, res) => {
-  res.sendFile(__dirname + "/public/allBooking.html");
+app.get("/admin/allBooking", (req, res) => {
+  const filePath = path.join(__dirname, "public", "allBooking.html");
+  fs.readFile(filePath, "utf8", (err, html) => {
+    if (err) {
+      res.status(500).send("Failed to load the bank page.");
+      return;
+    }
+    res.send(html);
+  });
 });
-
+app.get("/admin/tickets", (req, res) => {
+  const filePath = path.join(__dirname, "public", "Tickets.html");
+  fs.readFile(filePath, "utf8", (err, html) => {
+    if (err) {
+      res.status(500).send("Failed to load the bank page.");
+      return;
+    }
+    res.send(html);
+  });
+});
 function savePassengers(passengers, callback) {
   // Start a transaction
   connection.beginTransaction((err) => {
@@ -502,19 +522,75 @@ Your Company Name`,
 app.post("/reject_passenger", (req, res) => {
   const passengerId = req.body.passengerId;
 
+  // First, find the ticket_id associated with the passenger
   connection.query(
-    "UPDATE passengers SET status = ? WHERE id = ?",
-    ["rejected", passengerId],
+    "SELECT ticket_id FROM passengers WHERE id = ?",
+    [passengerId],
     (err, results) => {
       if (err) {
-        console.error("Error updating passenger status:", err);
+        console.error("Error finding passenger ticket:", err);
         res.status(500).json({ error: "Internal Server Error" });
+      } else if (results.length === 0) {
+        res.status(404).json({ error: "Passenger not found" });
       } else {
-        res.json({ success: true });
+        const ticketId = results[0].ticket_id;
+
+        // Start a transaction
+        connection.beginTransaction((err) => {
+          if (err) {
+            console.error("Error starting transaction:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            // Update the passenger's status to 'rejected'
+            connection.query(
+              "UPDATE passengers SET status = ? WHERE id = ?",
+              ["rejected", passengerId],
+              (err, results) => {
+                if (err) {
+                  return connection.rollback(() => {
+                    console.error("Error updating passenger status:", err);
+                    res.status(500).json({ error: "Internal Server Error" });
+                  });
+                }
+
+                // Increment the no_of_tickets in the tickets table
+                connection.query(
+                  "UPDATE tickets SET no_of_tickets = no_of_tickets + 1 WHERE id = ?",
+                  [ticketId],
+                  (err, results) => {
+                    if (err) {
+                      return connection.rollback(() => {
+                        console.error("Error updating ticket count:", err);
+                        res
+                          .status(500)
+                          .json({ error: "Internal Server Error" });
+                      });
+                    }
+
+                    // Commit the transaction
+                    connection.commit((err) => {
+                      if (err) {
+                        return connection.rollback(() => {
+                          console.error("Error committing transaction:", err);
+                          res
+                            .status(500)
+                            .json({ error: "Internal Server Error" });
+                        });
+                      }
+
+                      res.json({ success: true });
+                    });
+                  }
+                );
+              }
+            );
+          }
+        });
       }
     }
   );
 });
+
 app.post("/save_passenger", (req, res) => {
   const passengers = req.body.passengers;
 
@@ -1007,6 +1083,78 @@ app.get("/print-ticket", async (req, res) => {
     res.status(500).send("Error generating PDF");
   }
 });
+app.get("/api/username", (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) {
+    return res.status(400).send("User ID is required");
+  }
+
+  const query = "SELECT username FROM user WHERE id = ?";
+  connection.query(query, [userId], (err, results) => {
+    if (err) {
+      return res.status(500).send("Database query failed");
+    }
+    if (results.length === 0) {
+      return res.status(404).send("User not found");
+    }
+    res.json({ username: results[0].username });
+  });
+});
+app.get("/ledger", (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  const query = `
+        SELECT 
+            tickets.date_of_ticket AS Dated, 
+            tickets.airline AS Airline, 
+            CONCAT(tickets.from_location, ' TO ', tickets.to_location) AS Sector,
+            tickets.pnr AS PNR, 
+            tickets.date_of_ticket AS Travel_Date, 
+            passengers.title AS Type,
+            CONCAT(passengers.surname, ' ', passengers.given_name) AS Passenger, 
+            tickets.fare AS Amount
+        FROM 
+            tickets 
+        JOIN 
+            passengers 
+        ON 
+            tickets.id = passengers.ticket_id 
+        WHERE 
+            tickets.date_of_ticket BETWEEN ? AND ?
+    `;
+
+  connection.query(query, [startDate, endDate], (err, results) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).send("Server Error");
+      return;
+    }
+
+    res.render("ledger", { data: results, startDate, endDate });
+  });
+});
+
+// Define a route for deleting a ticket
+app.delete("/api/deleteTicket", (req, res) => {
+  const ticketId = req.query.ticketId;
+  // Perform the necessary database query to update the ticket status to "canceled"
+  connection.query(
+    'UPDATE tickets SET ticket_status = "canceled" WHERE id = ?',
+    [ticketId],
+    (error, results) => {
+      if (error) {
+        console.error("Error canceling ticket:", error);
+        res.status(500).send("Error canceling ticket");
+      } else {
+        console.log("Ticket canceled successfully");
+        res.sendStatus(200);
+      }
+    }
+  );
+});
+
+
+
 
 // Start the server
 server.listen(port, () => {

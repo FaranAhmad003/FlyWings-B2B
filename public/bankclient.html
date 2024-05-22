@@ -170,29 +170,48 @@
 
 <body>
 
-			<nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
-				<div class="container-fluid">
-					<a href="/client" class="navbar-brand">Client Panel</a> <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button> 
-					<div id="navbarSupportedContent" class="collapse navbar-collapse">
-						<ul class="navbar-nav mr-auto">
-							<li class="nav-item"><a href="/client" class="nav-link">New Booking</a></li>
-							<li class="nav-item"><a class="nav-link"
-                                       href="../public/myBooking.html">My Bookings</a></li>
-							<li class="nav-item"><a href="bankclient.html" class="nav-link">Banks</a></li>
-						</ul>
+            <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand">Client Portal</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a id = "newBooking"class="nav-link">New Booking</a>
+                            </li>
+                        <li class="nav-item">
+            <a id="myBookingsLink" class="nav-link">My Bookings</a>
+        </li>
+                            <li class="nav-item">
+                                <a id="bankLink" class="nav-link">Banks</a>
+                            </li>
+                            <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
+
+                            </li>
+                        </ul>
+                        <!-- Right Side Of Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
-        <li class="nav-item dropdown">
-           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button"
-   aria-expanded="false" v-pre>
-   <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
-</a>
+<li class="nav-item dropdown">
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+        <span id="usernameDisplay"></span> <!-- Username display element -->
+        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+    </a>
+</li>
 
-        </li>
+
     </ul>
-					</div>
-				</div>
-			</nav>
+
+                    </div>
+                </div>
+            </nav>
     <header>
         <div class="header-container">
             <h2>Banks</h2>
@@ -241,7 +260,7 @@
                         </tr>
                         <tr>
                             <td>4</td>
-                            <td>Standard Charted</td>
+                            <td>Standard Chartered</td>
                             <td>TARIQ SALEEM</td>
                             <td>01033676401</td>
                             <td>PK42SCBL0000001033676401</td>
@@ -258,4 +277,40 @@
 
                         </tbody>
                         </table>
-                        </div></div></main></body></html>
+                        </div></div>
+        
+        
+        
+        
+        
+                    </main>
+                    
+                    
+                   <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        if (userId) {
+            const myBookingsLink = document.getElementById('myBookingsLink');
+            myBookingsLink.href = `/client/myBooking?userId=${userId}`;
+            bankLink.href=`/client/bank?userId=${userId}`;
+            newBooking.href=`/client?userId=${userId}`;
+            // Fetch the username from the server
+            fetch(`/api/username?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.username) {
+                        // Display the username on the screen
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        usernameDisplay.textContent = data.username;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching username:', error);
+                });
+        }
+    });
+       
+    </script>         
+    </body>
+</html>

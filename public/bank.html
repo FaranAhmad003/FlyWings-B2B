@@ -179,21 +179,38 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../public/allBooking.html">Manage Booking</a>
+                            <a class="nav-link" href="/admin/allBooking">Manage Booking</a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="/admin/bank">Banks</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="">My Ledger</a>
+                            <a class="nav-link" href="/admin/ledger">My Ledger</a>
+                        </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="/admin/tickets">Manage Tickets</a>
+                        </li>
+                        <li class="nav-item">
+
                         </li>
                     </ul>
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Authentication Links -->
+                        <li class="nav-item dropdown">
+                            <form id="logout-form" action="https://travelnetwork.pk/logout" method="POST"
+                                style="display: none;">
+                                <input type="hidden" name="_token" value="Sk9GPhBdSx5lFjwpZdVk9xdNMjWjk6FpPRbJfJrg">
+                            </form>
+                </div>
+                </li>
+                </ul>
             </div>
-    </div>
-    </nav>
+            </nav>
     </div>
     <header>
         <div class="header-container">

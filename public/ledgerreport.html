@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Travel Network & Tours</h1>
+    <h3>Agents Sale Ledger</h3>
+    <form method="get" action="/ledger">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" value="<%= startDate %>">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" value="<%= endDate %>">
+        <button type="submit">Filter</button>
+    </form>
+    <table>
+        <tr>
+            <th>Dated</th>
+            <th>Airline</th>
+            <th>Sector</th>
+            <th>PNR</th>
+            <th>Travel Date</th>
+            <th>Type</th>
+            <th>Passenger</th>
+            <th>Amount</th>
+        </tr>
+        <% data.forEach(row => { %>
+            <tr>
+                <td><%= row.Dated %></td>
+                <td><%= row.Airline %></td>
+                <td><%= row.Sector %></td>
+                <td><%= row.PNR %></td>
+                <td><%= row.Travel_Date %></td>
+                <td><%= row.Type %></td>
+                <td><%= row.Passenger %></td>
+                <td><%= row.Amount %></td>
+            </tr>
+        <% }) %>
+    </table>
+</body>
+</html>

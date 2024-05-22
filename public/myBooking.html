@@ -30,30 +30,48 @@ td:hover .btn {
    </style>
    <body>
       <div id="app">
-         <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
-            <div class="container-fluid">
-              
-               <div id="navbarSupportedContent" class="collapse navbar-collapse">
-                  <ul class="navbar-nav mr-auto">
-                      <li class="nav-item">
-                            <a id="newBookingLink" class="nav-link">New Booking</a>
-                        </li>
-                     <li class="nav-item"><a href="" class="nav-link">My Bookings</a></li>
-                     <li class="nav-item"><a href="/client/bank" class="nav-link">Banks</a></li>
-                    
-                     
-                  </ul>
-                  <ul class="navbar-nav ml-auto">
-                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        FLY WINGS INTERNATIOAL <span class="caret"></span></a> 
-                        <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
-                        </div>
-                     </li>
-                  </ul>
-               </div>
-            </div>
-         </nav>
+            <nav class="navbar navbar-dark bg-dark navbar-expand-md shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand">Client Portal</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a id = "newBooking" class="nav-link">New Booking</a>
+                            </li>
+                        <li class="nav-item">
+            <a id="myBookingsLink" class="nav-link">My Bookings</a>
+        </li>
+                            <li class="nav-item">
+                                <a id="bankLink" class="nav-link">Banks</a>
+                            </li>
+                            <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
+
+                            </li>
+                        </ul>
+                        <!-- Right Side Of Navbar -->
+    <ul class="navbar-nav ml-auto">
+        <!-- Authentication Links -->
+<li class="nav-item dropdown">
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+        <span id="usernameDisplay"></span> <!-- Username display element -->
+        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+    </a>
+</li>
+
+
+    </ul>
+
+                    </div>
+                </div>
+            </nav>
          <main class="py-4" style="width: 90%; margin: auto;">
             <div id="app">
                <div>
@@ -415,36 +433,42 @@ dataRow.innerHTML =
     ${(passenger.passenger_status === 'hold') ? 
     `<div style="display: inline-block; background-color: orange; color: black; padding: 5px 5px; margin-left: 10px; border-radius: 5px; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);">3 hours left</div>` 
     : ''}
-    ${(passenger.passenger_status === 'approved') ? 
+    ${(passenger.passenger_status === 'approved' || passenger.passenger_status==='hold') ? 
     `<button type="button" onclick="window.location.href='/public/printingTicket.html?passenger_id=${passenger.passenger_id}'">
         <img src="/images/printing.png" alt="Print Icon" width="16" height="16">
     </button>` 
     : ''}
-</td>
-
-
-
-`;
-
-
-
-
+</td>`;
           row.appendChild(dataRow);
          });
          console.log('row', row);
          container.appendChild(row);   
-      })
-      document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('userId');
-         if (userId) {
-                document.getElementById('newBookingLink').href = `/client?userId=${userId}`;
-                document.getElementById('myBookingsLink').href = `/client/myBooking?userId=${userId}`;
-                document.getElementById('bank').href = `/client?userId=${userId}`;
-                document.getElementById('bank').href = `/client/bank?userId=${userId}`;
-            }
+      })</script>
 
-         }
-      );
-   </script>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        if (userId) {
+            const myBookingsLink = document.getElementById('myBookingsLink');
+            myBookingsLink.href = `/client/myBooking?userId=${userId}`;
+            bankLink.href=`/client/bank?userId=${userId}`;
+            newBooking.href=`/client?userId=${userId}`;
+            // Fetch the username from the server
+            fetch(`/api/username?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.username) {
+                        // Display the username on the screen
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        usernameDisplay.textContent = data.username;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching username:', error);
+                });
+        }
+    });
+       
+    </script>
 </html>

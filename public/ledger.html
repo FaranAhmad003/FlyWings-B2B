@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Ledger Report Filter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: calc(50% - 5px);
+        padding: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>Agent Ledger Report Filter</h1>
+        <form id="filterForm" action="/ledger" method="GET">
+            <div class="form-group">
+                <label for="startDate">Date Range <span>*</span></label>
+                <input type="date" id="startDate" name="startDate" required>
+                <input type="date" id="endDate" name="endDate" required>
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
