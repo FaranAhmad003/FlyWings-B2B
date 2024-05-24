@@ -5,77 +5,298 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Ledger Report Filter</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 10px;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .results table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results th, .results td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .results th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .results tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .results p {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .loading {
+            font-size: 16px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        @media print {
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         margin: 0;
-    }
-
-    .container {
-        background-color: white;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 400px;
-        text-align: center;
+        font-family: Arial, sans-serif;
     }
-
-    h1 {
-        margin-bottom: 20px;
-        font-size: 24px;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
     }
-
-    .form-group {
-        margin-bottom: 15px;
+    th, td {
+        border: 1px solid #000 !important; /* Ensure border color for print */
+        padding: 12px;
+        text-align: left;
     }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .total-row {
         font-weight: bold;
+        background-color: #f2f2f2;
     }
+}
 
-    .form-group input {
-        width: calc(50% - 5px);
-        padding: 10px;
-        margin-right: 10px;
-        margin-left: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
 
-    button {
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-</style>
+    </style>
+</head>
 <body>
     <div class="container">
         <h1>Agent Ledger Report Filter</h1>
-        <form id="filterForm" action="/ledger" method="GET">
+        <form id="filterForm">
             <div class="form-group">
                 <label for="startDate">Date Range <span>*</span></label>
                 <input type="date" id="startDate" name="startDate" required>
                 <input type="date" id="endDate" name="endDate" required>
             </div>
             <button type="submit">Search</button>
+            <button type="button" id="printButton">Print</button>
         </form>
+        <div class="results" id="results"></div>
+        <div class="loading" id="loading" style="display: none;">Loading...</div>
     </div>
-    <script src="app.js"></script>
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const resultsDiv = document.getElementById('results');
+            const loadingDiv = document.getElementById('loading');
+            resultsDiv.innerHTML = '';
+            loadingDiv.style.display = 'block';
+
+            fetch(`/ledger?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<p>${data.error}</p>`;
+                        return;
+                    }
+
+                    if (data.length === 0) {
+                        resultsDiv.innerHTML = `<p>No results found for the selected date range.</p>`;
+                        return;
+                    }
+
+                    let tableHtml = `
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Dated</th>
+                                         <th>time</th>
+                                        <th>Airline</th>
+                                        <th>Sector</th>
+                                        <th>PNR</th>
+                                        <th>Travel Date</th>
+                                        <th>Type</th>
+                                        <th>Passenger</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    let totalAmount = 0;
+
+                    data.forEach(ticket => {
+                        const formattedDated = new Date(ticket.Dated).toLocaleString();
+                        const formattedTravelDate = new Date(ticket.Travel_Date).toLocaleString();
+                        tableHtml += `
+                            <tr>
+                                <td>${formattedDated}</td>
+                                <td>${ticket.time}</td>
+                                <td>${ticket.Airline}</td>
+                                <td>${ticket.Sector}</td>
+                                <td>${ticket.PNR}</td>
+                                <td>${formattedTravelDate}</td>
+                                <td>${ticket.Type}</td>
+                                <td>${ticket.Passenger}</td>
+                                <td>${ticket.Amount}</td>
+                            </tr>
+                        `;
+                        totalAmount += parseFloat(ticket.Amount);
+                    });
+
+                    tableHtml += `
+                            <tr class="total-row">
+                                <td colspan="7">Total Amount</td>
+                                <td>${totalAmount.toFixed(2)}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    `;
+
+                    resultsDiv.innerHTML = tableHtml;
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    console.error('Error fetching data:', error);
+                    resultsDiv.innerHTML = `<p>Error fetching data. Please try again later.</p>`;
+                });
+        });
+
+document.getElementById('printButton').addEventListener('click', function() {
+    const printContents = document.getElementById('results').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Print</title>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }
+                th, td {
+                    border: 1px solid #ccc;
+                    padding: 12px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+                tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+                .total-row {
+                    font-weight: bold;
+                    background-color: #f2f2f2;
+                }
+            </style>
+        </head>
+        <body>
+            ${printContents}
+        </body>
+        </html>
+    `);
+    printWindow.document.close(); // Close the document for writing
+    printWindow.print(); // Trigger the print dialog
+});
+
+
+    </script>
 </body>
 </html>

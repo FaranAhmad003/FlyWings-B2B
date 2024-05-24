@@ -848,176 +848,183 @@ $(document).ready(function(){
 });
   </script>
     <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const group = urlParams.get('group');
-	const socket = io();
-    console.log('group:', group); 
-    fetch(`/tickets?group=${group}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        // Display the error
-        document.getElementById('error').textContent = data.error;
-      } else {
-        // Create and append elements for each ticket
-        const container = document.getElementById('tickets');
-        const pakistanAirlines = [
-          "PIA",
-          "Airblue",
-          "Serene Air",
-          "AirSial",
-          "Fly Jinnah"
-        ];
-        const addedAirlines = [];
-        pakistanAirlines.forEach(airline => {
-        data.forEach(ticket => {
-          if(ticket.airline == airline && !addedAirlines.includes(airline))
-          {
-            addedAirlines.push(airline);
-            const row = document.createElement('tbody');
-            row.innerHTML = `<thead data-v-62498c33="">
-            <tr data-v-62498c33="">
-                <th data-v-62498c33="" colspan="6" style="text-align: center;"><img data-v-62498c33="" src="/storage/airlines/1693054243.png" alt="01. AIR ARABIA LYP-AUH" style="width: 150px; vertical-align: middle;"> <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.from_location} TO ${ticket.to_location}</span></th>
-            </tr>
-            <tr data-v-62498c33="" class="thead-dark">
-                <th data-v-62498c33="" scope="col">DATE</th>
-                <th data-v-62498c33="" scope="col">No of Tickets</th>
-				<th data-v-62498c33="" scope="col">PNR</th>
-                <th data-v-62498c33="" scope="col">BAG</th>
-                <th data-v-62498c33="" scope="col">MEAL</th>
-                <th data-v-62498c33="" scope="col">FARE</th>
-                <th data-v-62498c33="" scope="col"></th>
-            </tr>
-          </thead>`;
-            container.appendChild(row);
-        }
-        if(ticket.airline == airline){
-          const date = new Date(ticket.date_of_ticket);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
-          const year = date.getFullYear();
-          const formattedDate = `${day}-${month}-${year}`;
-          const row = document.createElement('tbody');
+<script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const group = urlParams.get('group');
+        const socket = io();
+        console.log('group:', group); 
+        fetch(`/tickets?group=${group}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                // Display the error
+                document.getElementById('error').textContent = data.error;
+            } else {
+                // Create and append elements for each ticket
+                const container = document.getElementById('tickets');
+                const pakistanAirlines = [
+                    "PIA",
+                    "Airblue",
+                    "Serene Air",
+                    "AirSial",
+                    "Fly Jinnah"
+                ];
+                const airlineImages = {
+                    "PIA": "/storage/airlines/pia.webp",
+                    "Airblue": "/storage/airlines/airblue.png",
+                    "Serene Air": "/storage/airlines/serene.png",
+                    "AirSial": "/storage/airlines/airarabia.png",
+                    "Fly Jinnah": "/storage/airlines/flyjinnah1.png"
+                };
+                const addedAirlines = [];
+                pakistanAirlines.forEach(airline => {
+                    data.forEach(ticket => {
+                        if (ticket.airline == airline && !addedAirlines.includes(airline)) {
+                            addedAirlines.push(airline);
+                            const row = document.createElement('tbody');
+                            row.innerHTML = `<thead data-v-62498c33="">
+                                <tr data-v-62498c33="">
+                                    <th data-v-62498c33="" colspan="6" style="text-align: center;">
+                                        <img data-v-62498c33="" src="${airlineImages[airline]}" alt="${airline}" style="width: 150px; vertical-align: middle;"> 
+                                        <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> 
+                                        <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.from_location} TO ${ticket.to_location}</span>
+                                    </th>
+                                </tr>
+                                <tr data-v-62498c33="" class="thead-dark">
+                                    <th data-v-62498c33="" scope="col">DATE</th>
+                                    <th data-v-62498c33="" scope="col">No of Tickets</th>
+                                    <th data-v-62498c33="" scope="col">PNR</th>
+                                    <th data-v-62498c33="" scope="col">BAG</th>
+                                    <th data-v-62498c33="" scope="col">MEAL</th>
+                                    <th data-v-62498c33="" scope="col">FARE</th>
+                                    <th data-v-62498c33="" scope="col"></th>
+                                </tr>
+                            </thead>`;
+                            container.appendChild(row);
+                        }
+                        if(ticket.airline == airline){
+                            const date = new Date(ticket.date_of_ticket);
+                            const day = String(date.getDate()).padStart(2, '0');
+                            const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+                            const year = date.getFullYear();
+                            const formattedDate = `${day}-${month}-${year}`;
+                            const row = document.createElement('tbody');
 
-          row.innerHTML = `
-          <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(255, 195, 0); color: white;">
-            <td style="color: black;">${formattedDate}</td>
-<td style="color: black;">${ticket.no_of_tickets}</td>
-<td style="color: black;">${ticket.pnr}</td>
-<td style="color: black;">${ticket.luggage_capacity} KG</td>
-<td><span style="color: black;"><b>${ticket.meal}</b></span></td>
-<td style="color: black;"><b>${ticket.fare} PKR/-</b></td>
+                            row.innerHTML = `
+                                <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(255, 195, 0); color: white;">
+                                    <td style="color: black;">${formattedDate}</td>
+                                    <td style="color: black;">${ticket.no_of_tickets}</td>
+                                    <td style="color: black;">${ticket.pnr}</td>
+                                    <td style="color: black;">${ticket.luggage_capacity} KG</td>
+                                    <td><span style="color: black;"><b>${ticket.meal}</b></span></td>
+                                    <td style="color: black;"><b>${ticket.fare} PKR/-</b></td>
+                                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block" style="background-color: rgb(255, 87, 51); border-color: rgb(255, 87, 51); color: black;"><b>SELECT</b></a></td>
+                                </tr>
+                            `;
+                            container.appendChild(row);
 
-            <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block" style="background-color: rgb(255, 87, 51); border-color: rgb(255, 87, 51); color: black;"><b>SELECT</b></a></td>
-
-			
-            </tr>
-          `;
-          container.appendChild(row);
-
-          // Add additional HTML
-          const additionalHTML = document.createElement('tbody');
-          additionalHTML.setAttribute('data-v-62498c33', '');
-          additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
-          additionalHTML.style.display = 'none';
-		  if(ticket.trip_type == 'RETURN'){
-			additionalHTML.innerHTML = `
-            <tr style="background-color: gainsboro;">
-              <th scope="col">Return Date</th>
-              <th scope="col">Flight #</th>
-              <th scope="col">Origin/Destination</th>
-              <th scope="col">Dept Time</th>
-              <th scope="col">Arrival Time</th>
-              <th scope="col"></th>
-            </tr>
-            <tr>
-				<td style="background-color: rgb(27, 66, 39); color: white;">${ticket.returnDate} - ${ticket.returnTime}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
-              <td></td>
-            </tr>
-          `;
-		}
-		else{
-          additionalHTML.innerHTML = `
-            <tr style="background-color: gainsboro;">
-              <th scope="col"></th>
-              <th scope="col">Flight #</th>
-              <th scope="col">Origin/Destination</th>
-              <th scope="col">Dept Time</th>
-              <th scope="col">Arrival Time</th>
-              <th scope="col"></th>
-            </tr>
-            <tr>
-              <td scope="row"></td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
-              <td></td>
-            </tr>
-          `;
-		}
-          container.appendChild(additionalHTML);
-          }
+                            // Add additional HTML
+                            const additionalHTML = document.createElement('tbody');
+                            additionalHTML.setAttribute('data-v-62498c33', '');
+                            additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
+                            additionalHTML.style.display = 'none';
+                            if(ticket.trip_type == 'RETURN'){
+                                additionalHTML.innerHTML = `
+                                    <tr style="background-color: gainsboro;">
+                                        <th scope="col">Return Date</th>
+                                        <th scope="col">Flight #</th>
+                                        <th scope="col">Origin/Destination</th>
+                                        <th scope="col">Dept Time</th>
+                                        <th scope="col">Arrival Time</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.returnDate} - ${ticket.returnTime}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+                                        <td></td>
+                                    </tr>
+                                `;
+                            } else {
+                                additionalHTML.innerHTML = `
+                                    <tr style="background-color: gainsboro;">
+                                        <th scope="col"></th>
+                                        <th scope="col">Flight #</th>
+                                        <th scope="col">Origin/Destination</th>
+                                        <th scope="col">Dept Time</th>
+                                        <th scope="col">Arrival Time</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row"></td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flight_number}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.from_location} - ${ticket.to_location}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.deptTime}</td>
+                                        <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+                                        <td></td>
+                                    </tr>
+                                `;
+                            }
+                            container.appendChild(additionalHTML);
+                        }
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            // Display any network errors
+            console.error('Error:', error);
         });
-      });
-      }
-    })
-    .catch(error => {
-      // Display any network errors
-  console.error('Error:', error);
-    });
-	socket.on('ticketCreated', (ticket) => {
-		const container = document.getElementById('tickets');
-		const date = new Date(ticket.date_of_ticket);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
-          const year = date.getFullYear();
-          const formattedDate = `${day}-${month}-${year}`;
-          const row = document.createElement('tbody');
 
-          row.innerHTML = `
-          <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(95, 63, 63); color: white;">
-            <td>${formattedDate}</td>
-            <td>${ticket.no_of_tickets}</td>
-            <td>${ticket.luggage_capacity} KG</td>
-            <td><span style="color: red;"><b>${ticket.meal}</b></span></td>
-            <td><b>${ticket.fare} PKR/-</b></td>
-            <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
-            </tr>
-          `;
-          container.appendChild(row);
+        socket.on('ticketCreated', (ticket) => {
+            const container = document.getElementById('tickets');
+            const date = new Date(ticket.date_of_ticket);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+            const year = date.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            const row = document.createElement('tbody');
 
-          // Add additional HTML
-          const additionalHTML = document.createElement('tbody');
-          additionalHTML.setAttribute('data-v-62498c33', '');
-          additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
-          additionalHTML.style.display = 'none';
-          additionalHTML.innerHTML = `
-            <tr style="background-color: gainsboro;">
-              <th scope="col"></th>
-              <th scope="col">Flight #</th>
-              <th scope="col">Origin/Destination</th>
-              <th scope="col">Dept Time</th>
-              <th scope="col">Arrival Time</th>
-              <th scope="col"></th>
-            </tr>
-            <tr>
-              <td scope="row"></td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flightNumber}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.fromLocation} - ${ticket.toLocation}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.time}</td>
-              <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
-              <td></td>
-            </tr>
-          `;
-          container.appendChild(additionalHTML);
-  });
-  </script>
+            row.innerHTML = `
+                <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(95, 63, 63); color: white;">
+                    <td>${formattedDate}</td>
+                    <td>${ticket.no_of_tickets}</td>
+                    <td>${ticket.luggage_capacity} KG</td>
+                    <td><span style="color: red;"><b>${ticket.meal}</b></span></td>
+                    <td><b>${ticket.fare} PKR/-</b></td>
+                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
+                </tr>
+            `;
+            container.appendChild(row);
+
+            // Add additional HTML
+            const additionalHTML = document.createElement('tbody');
+            additionalHTML.setAttribute('data-v-62498c33', '');
+            additionalHTML.setAttribute('id', `group_body_${ticket.id}`);
+            additionalHTML.style.display = 'none';
+            additionalHTML.innerHTML = `
+                <tr style="background-color: gainsboro;">
+                    <th scope="col"></th>
+                    <th scope="col">Flight #</th>
+                    <th scope="col">Origin/Destination</th>
+                    <th scope="col">Dept Time</th>
+                    <th scope="col">Arrival Time</th>
+                    <th scope="col"></th>
+                </tr>
+                <tr>
+                    <td scope="row"></td>
+                    <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.flightNumber}</td>
+                    <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.fromLocation} - ${ticket.toLocation}</td>
+                    <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.time}</td>
+                    <td style="background-color: rgb(27, 66, 39); color: white;">${ticket.arrivalTime}</td>
+                    <td></td>
+                </tr>
+            `;
+            container.appendChild(additionalHTML);
+        });
+    </script>
   <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);

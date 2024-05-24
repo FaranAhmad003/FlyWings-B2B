@@ -409,6 +409,36 @@ app.get("/get_passenger", (req, res) => {
     }
   );
 });
+app.get("/get_approved_passengers", (req, res) => {
+  const id = getUserId();
+  connection.query(
+    "SELECT passengers.id AS passenger_id, passengers.status AS passenger_status, tickets.id AS ticket_id, passengers.given_name AS given_name, passengers.surname AS last_name, passengers.*, tickets.* FROM passengers LEFT JOIN tickets ON passengers.ticket_id = tickets.id WHERE passengers.user_id = ? AND status = 'approved' LIMIT 0, 1000;",
+    [id],
+    (err, results) => {
+      if (err) {
+        console.error("Error fetching passenger:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+app.get("/get_cancelled_passengers", (req, res) => {
+  const id = getUserId();
+  connection.query(
+    "SELECT passengers.id AS passenger_id, passengers.status AS passenger_status, tickets.id AS ticket_id, passengers.given_name AS given_name, passengers.surname AS last_name, passengers.*, tickets.* FROM passengers LEFT JOIN tickets ON passengers.ticket_id = tickets.id WHERE passengers.user_id = ? AND status = 'rejected' OR status = 'cancelled' LIMIT 0, 1000;",
+    [id],
+    (err, results) => {
+      if (err) {
+        console.error("Error fetching passenger:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
 app.get("/get_all_passenger", (req, res) => {
   var username = getUsername();
   const status = req.query.status; // Retrieve status from query parameters
@@ -1103,8 +1133,15 @@ app.get("/api/username", (req, res) => {
 app.get("/ledger", (req, res) => {
   const { startDate, endDate } = req.query;
 
+  if (!startDate || !endDate) {
+    return res
+      .status(400)
+      .json({ error: "Start date and end date are required" });
+  }
+
   const query = `
-        SELECT 
+        SELECT
+            tickets.deptTime AS time,
             tickets.date_of_ticket AS Dated, 
             tickets.airline AS Airline, 
             CONCAT(tickets.from_location, ' TO ', tickets.to_location) AS Sector,
@@ -1126,13 +1163,14 @@ app.get("/ledger", (req, res) => {
   connection.query(query, [startDate, endDate], (err, results) => {
     if (err) {
       console.error("Error fetching data:", err);
-      res.status(500).send("Server Error");
+      res.status(500).json({ error: "Server Error" });
       return;
     }
 
-    res.render("ledger", { data: results, startDate, endDate });
+    res.json(results);
   });
 });
+
 
 // Define a route for deleting a ticket
 app.delete("/api/deleteTicket", (req, res) => {
