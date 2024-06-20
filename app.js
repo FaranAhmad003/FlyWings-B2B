@@ -20,10 +20,18 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname));
 const crypto = require("crypto");
 const secret = crypto.randomBytes(64).toString("hex");
+const adminsecret=crypto.randomBytes(64).toString("hex");
 console.log(secret);
 app.use(
   session({
     secret: secret, // Change this to a secure secret key
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(
+  session({
+    secret: adminsecret, // Change this to a secure secret key
     resave: false,
     saveUninitialized: true,
   })
@@ -60,6 +68,29 @@ function requireLogin(req, res, next) {
     res.redirect("/"); // Redirect to login page if not logged in
   }
 }
+function requireAdmin(req, res, next) {
+  if (
+    req.session &&
+    req.session.userInfo &&
+    req.session.userInfo.user_type === "admin"
+  ) {
+    next();
+  } else {
+    res.redirect("/");
+  }
+}
+
+function requireClient(req, res, next) {
+  if (
+    req.session &&
+    req.session.userInfo &&
+    req.session.userInfo.user_type === "client"
+  ) {
+    next();
+  } else {
+    res.redirect("/");
+  }
+}
 
 
 // Serve the HTML page
@@ -81,7 +112,7 @@ app.get('/logout', (req, res) => {
 app.get("/signup", (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
-app.get("/admin/ledger", requireLogin, (req, res) => {
+app.get("/admin/ledger", requireAdmin, (req, res) => {
   res.sendFile(__dirname + "/public/ledger.html");
 });
 
@@ -248,7 +279,7 @@ function isPasswordComplex(password) {
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
-app.get("/client",requireLogin,(req, res) => {
+app.get("/client",requireClient,(req, res) => {
   const userId = req.session.userId;
   const filePath = path.join(__dirname, "public", "client_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
@@ -282,7 +313,7 @@ app.get("/admin/bank",requireLogin, (req, res) => {
   });
 });
 
-app.get("/admin",requireLogin, (req, res) => {
+app.get("/admin",requireAdmin, (req, res) => {
   const filePath = path.join(__dirname, "public", "admin_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
