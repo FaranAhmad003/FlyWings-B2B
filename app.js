@@ -13,18 +13,21 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const path = require("path");
 const nodemailer = require("nodemailer");
-require('html');
+require("html");
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
+
+app.use(express.static(__dirname));
+const crypto = require("crypto");
+const secret = crypto.randomBytes(64).toString("hex");
+console.log(secret);
 app.use(
   session({
-    secret: "your-secret-key", // Change this to a secure secret key
+    secret: secret, // Change this to a secure secret key
     resave: false,
     saveUninitialized: true,
   })
 );
-app.use(express.static(__dirname));
-
 // MySQL connection
 const connection = mysql.createConnection({
   host: "localhost",
@@ -45,17 +48,40 @@ connection.connect((err) => {
     console.error("Error connecting to MySQL:", err);
   } else {
     console.log("Connected to MySQL database");
-  } 
+  }
 });
+
+//middleware--------------
+function requireLogin(req, res, next) {
+  console.log(req.session);
+  if (req.session && req.session.userId) {
+    next();
+  } else {
+    res.redirect("/"); // Redirect to login page if not logged in
+  }
+}
+
 
 // Serve the HTML page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
+//logout
+// Logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Failed to log out.');
+    }
+    res.redirect('/'); // Redirect to login page after logout
+  });
+});
+
 app.get("/signup", (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
-app.get("/admin/ledger", (req, res) => {
+app.get("/admin/ledger", requireLogin, (req, res) => {
   res.sendFile(__dirname + "/public/ledger.html");
 });
 
@@ -73,6 +99,9 @@ app.get("/printTable", (req, res) => {
 });
 app.get("/signupSuccess", (req, res) => {
   res.sendFile(__dirname + "/public/signupSuccess.html");
+});
+app.get("/client/Ledger", requireLogin, (req, res) => {
+  res.sendFile(__dirname + "/public/clientLedger.html");
 });
 // Handle signup POST request
 app.post("/signup", (req, res) => {
@@ -130,7 +159,7 @@ app.get("/usernames", (req, res) => {
     }
   );
 });
-app.get("/client/myBooking", (req, res) => {
+app.get("/client/myBooking", requireLogin, (req, res) => {
   const userId = req.query.userId; // Get the userId from query parameters
   console.log("User ID for myBooking:", userId);
   // You can now use userId for further processing, such as fetching user-specific bookings
@@ -152,20 +181,21 @@ app.get("/tickets", (req, res) => {
   console.log("Username:", username);
   const group = req.query.group;
   let query; // Declare query variable outside the if-else statements
-if (group === "uae") {
-  query =
-    'SELECT * FROM tickets WHERE to_location IN ("Dubai", "Abu Dhabi", "Sharjah", "Ras al-Khaimah", "Muscat") AND no_of_tickets > 0 AND ticket_status = "active"';
-} else if (group === "ksa") {
-  query =
-    'SELECT * FROM tickets WHERE to_location IN ("Muscat", "Salalah", "Sohar", "Duqm", "Khasab", "Musandam", "Nizwa", "Sur", "Masirah", "Buraimi", "Ibri", "Rustaq", "Thumrait", "Marmul", "Fahud", "Qarn Alam", "Mukhaizna", "Jaaluni", "Adam") AND no_of_tickets > 0 AND ticket_status = "active"';
-} else if (group === "umrah") {
-  query =
-    'SELECT * FROM tickets WHERE to_location IN ("Riyadh", "Jeddah", "Dammam", "Medina", "Abha", "Tabuk", "Taif", "Qassim", "Yanbu", "Hail") AND no_of_tickets > 0 AND ticket_status = "active"';
-} else if (group === "all") {
-  query = 'SELECT * FROM tickets WHERE ticket_status = "active"';
-} else {
-  return res.status(400).json({ error: "Invalid group" });
-}
+  if (group === "uae") {
+    query =
+      'SELECT *, to_location AS toLocation, from_location AS fromLocation FROM tickets WHERE to_location IN ("Dubai", "Abu Dhabi", "Sharjah", "Ras al-Khaimah", "Muscat") AND no_of_tickets > 0 AND ticket_status = "active";';
+  } else if (group === "ksa") {
+    query =
+      'SELECT *, to_location AS toLocation, from_location AS fromLocation FROM tickets WHERE to_location IN ("Muscat", "Salalah", "Sohar", "Duqm", "Khasab", "Musandam", "Nizwa", "Sur", "Masirah", "Buraimi", "Ibri", "Rustaq", "Thumrait", "Marmul", "Fahud", "Qarn Alam", "Mukhaizna", "Jaaluni", "Adam") AND no_of_tickets > 0 AND ticket_status = "active";';
+  } else if (group === "umrah") {
+    query =
+      'SELECT *, to_location AS toLocation, from_location AS fromLocation FROM tickets WHERE to_location IN ("Riyadh", "Jeddah", "Dammam", "Medina", "Abha", "Tabuk", "Taif", "Qassim", "Yanbu", "Hail") AND no_of_tickets > 0 AND ticket_status = "active";';
+  } else if (group === "all") {
+    query =
+      'SELECT *, to_location AS toLocation, from_location AS fromLocation FROM tickets WHERE ticket_status = "active";';
+  } else {
+    return res.status(400).json({ error: "Invalid group" });
+  }
   connection.query(query, [username], (err, results) => {
     if (err) {
       console.error("Error fetching tickets:", err);
@@ -218,22 +248,20 @@ function isPasswordComplex(password) {
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
-app.get("/client", (req, res) => {
-  const userId = req.query.userId; // Get the userId from query parameters
+app.get("/client",requireLogin,(req, res) => {
+  const userId = req.session.userId;
   const filePath = path.join(__dirname, "public", "client_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
       res.status(500).send("Failed to load the client home page.");
       return;
     }
-    // Here you can inject userId into the HTML or use it as needed
-    // For example, you can customize the HTML response by replacing a placeholder with userId
     const customizedHtml = html.replace("{{userId}}", userId);
     res.send(customizedHtml);
   });
 });
 
-app.get("/client/bank", (req, res) => {
+app.get("/client/bank", requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "bankclient.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -243,7 +271,7 @@ app.get("/client/bank", (req, res) => {
     res.send(html);
   });
 });
-app.get("/admin/bank", (req, res) => {
+app.get("/admin/bank",requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "bank.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -254,7 +282,7 @@ app.get("/admin/bank", (req, res) => {
   });
 });
 
-app.get("/admin", (req, res) => {
+app.get("/admin",requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "admin_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -264,7 +292,7 @@ app.get("/admin", (req, res) => {
     res.send(html);
   });
 });
-app.get("/admin/ticketStatus", (req, res) => {
+app.get("/admin/ticketStatus", requireLogin, (req, res) => {
   const query = "SELECT * FROM tickets";
   connection.query(query, (err, tickets) => {
     if (err) {
@@ -325,7 +353,7 @@ app.get("/forgotPassword", (req, res) => {
 app.get("/otpVerification", (req, res) => {
   res.sendFile(__dirname + "/public/otpVerification.html");
 });
-app.get("/admin/allBooking", (req, res) => {
+app.get("/admin/allBooking", requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "allBooking.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -335,7 +363,7 @@ app.get("/admin/allBooking", (req, res) => {
     res.send(html);
   });
 });
-app.get("/admin/tickets", (req, res) => {
+app.get("/admin/tickets", requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "Tickets.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -444,19 +472,19 @@ app.get("/get_all_passenger", (req, res) => {
   const status = req.query.status; // Retrieve status from query parameters
 
   let sqlQuery = `
-        SELECT 
-            passengers.id AS passenger_id,
-            passengers.status AS passenger_status,
-            tickets.id AS ticket_id,
-            passengers.*,
-            tickets.*,
-            user.username 
-        FROM 
-            passengers 
-        LEFT JOIN 
-            tickets ON passengers.ticket_id = tickets.id 
-        LEFT JOIN 
-            user ON user.username = ?
+       SELECT 
+    passengers.id AS passenger_id,
+    passengers.status AS passenger_status,
+    tickets.id AS ticket_id,
+    passengers.*,
+    tickets.*,
+    user.username AS clientname
+FROM 
+    passengers 
+LEFT JOIN 
+    tickets ON passengers.ticket_id = tickets.id 
+LEFT JOIN 
+    user ON passengers.user_id = user.id
     `;
 
   let params = [username]; // Start with username for the SQL parameters
@@ -467,6 +495,7 @@ app.get("/get_all_passenger", (req, res) => {
     params.push(status);
     window.location.reload();
   }
+  24;
 
   // Execute the query
   connection.query(sqlQuery, params, (err, results) => {
@@ -482,7 +511,7 @@ app.get("/get_all_passenger", (req, res) => {
 app.post("/approve_passenger", (req, res) => {
   const passengerId = req.body.passengerId;
 
-    connection.query(
+  connection.query(
     "UPDATE passengers SET status = ? WHERE id = ?",
     ["approved", passengerId],
     (err, results) => {
@@ -767,11 +796,13 @@ app.post("/login", (req, res) => {
         setUserId(user.id);
         name = formData.username;
 
+        // Setting session data
         req.session.userInfo = {
           username: formData.username,
           user_type: user.user_type,
           userId: user.id,
         };
+        req.session.userId = user.id; // Also set userId directly for easier access
 
         if (user.user_type === "admin") {
           console.log("Admin logged in successfully:", getUsername());
@@ -892,7 +923,6 @@ app.post("/createTicket", (req, res) => {
   );
 });
 
-
 // Define a new endpoint for displaying a specific ticket by ID
 app.get("/tickets/:ticketId", (req, res) => {
   const ticketId = req.params.ticketId; // Extract ticketId from URL parameters
@@ -900,7 +930,7 @@ app.get("/tickets/:ticketId", (req, res) => {
   console.log("Username:", username);
 
   // Construct the SQL query to select the ticket by its ID
-  const query = 'SELECT * FROM tickets WHERE id = ?';
+  const query = "SELECT * FROM tickets WHERE id = ?";
 
   // Execute the query to fetch the ticket by its ID
   connection.query(query, [ticketId], (err, results) => {
@@ -1004,8 +1034,6 @@ app.post("/ticketsedit/:ticketId", (req, res) => {
   );
 });
 
-
-
 //myBooking edit Passenger zaruri functions
 app.get("/api/getPassenger/:passengerId", (req, res) => {
   const passengerId = req.params.passengerId;
@@ -1032,7 +1060,6 @@ app.post("/api/editPassenger/:passengerId", (req, res) => {
     }
   );
 });
-
 
 app.get("/api/getPassengerDetails", (req, res) => {
   const passengerId = req.query.passenger_id;
@@ -1170,7 +1197,46 @@ app.get("/ledger", (req, res) => {
     res.json(results);
   });
 });
+app.get("/Clientledger", requireLogin, (req, res) => {
+  const { startDate, endDate, userId } = req.query;
 
+  if (!startDate || !endDate || !userId) {
+    return res
+      .status(400)
+      .json({ error: "Start date, end date, and user ID are required" });
+  }
+
+  const query = `
+    SELECT
+      tickets.deptTime AS time,
+      tickets.date_of_ticket AS Dated,
+      tickets.airline AS Airline,
+      CONCAT(tickets.from_location, ' TO ', tickets.to_location) AS Sector,
+      tickets.pnr AS PNR,
+      tickets.date_of_ticket AS Travel_Date,
+      passengers.title AS Type,
+      CONCAT(passengers.surname, ' ', passengers.given_name) AS Passenger,
+      tickets.fare AS Amount
+    FROM
+      tickets
+    JOIN
+      passengers ON tickets.id = passengers.ticket_id
+    WHERE
+      tickets.date_of_ticket BETWEEN ? AND ?
+      AND passengers.user_id = ?
+    LIMIT 0, 1000;
+  `;
+
+  connection.query(query, [startDate, endDate, userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Server Error" });
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 // Define a route for deleting a ticket
 app.delete("/api/deleteTicket", (req, res) => {
@@ -1190,9 +1256,6 @@ app.delete("/api/deleteTicket", (req, res) => {
     }
   );
 });
-
-
-
 
 // Start the server
 server.listen(port, () => {

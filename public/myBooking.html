@@ -60,9 +60,9 @@ td:hover .btn {
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
 <li class="nav-item dropdown">
-    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/logout" role="button" aria-expanded="false" v-pre>
         <span id="usernameDisplay"></span> <!-- Username display element -->
-        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+        <img src="/assets/logout.png"  style="width: 20px; height: 20px;">
     </a>
 </li>
 
@@ -433,7 +433,7 @@ dataRow.innerHTML =
     ${(passenger.passenger_status === 'hold') ? 
     `<div style="display: inline-block; background-color: orange; color: black; padding: 5px 5px; margin-left: 10px; border-radius: 5px; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);">3 hours left</div>` 
     : ''}
-    ${(passenger.passenger_status === 'approved' && passenger.passenger_status==='hold') ? 
+    ${(passenger.passenger_status === 'approved' || passenger.passenger_status==='hold') ? 
     `<button type="button" onclick="window.location.href='/public/printingTicket.html?passenger_id=${passenger.passenger_id}'">
         <img src="/images/printing.png" alt="Print Icon" width="16" height="16">
     </button>` 

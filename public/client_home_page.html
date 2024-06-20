@@ -191,16 +191,19 @@
                             <li class="nav-item">
                             </li>
                             <li class="nav-item">
-
+                                
+                            </li>
+                             <li class="nav-item">
+                                <a id="clientLedger" class="nav-link">Ledger</a>
                             </li>
                         </ul>
                         <!-- Right Side Of Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
 <li class="nav-item dropdown">
-    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/logout" role="button" aria-expanded="false" v-pre>
         <span id="usernameDisplay"></span> <!-- Username display element -->
-        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+        <img src="/assets/logout.png"  style="width: 20px; height: 20px;">
     </a>
 </li>
 
@@ -217,7 +220,7 @@
                         <div class="col-md-6">
 
                         </div>
-                        <div class="col-md-6 mt-3">
+                        <!-- <div class="col-md-6 mt-3">
                             <select name="airline_id" id="airline_id" class="form-control v-select" @input="updateUrl()">
                                 <option value="0">All Airlines</option>
                                 <option value="30">01. AIR ARABIA LYP-AUH</option>
@@ -277,7 +280,7 @@
                                 <option value="44">TURKISH AIRLINE ISB-LHR</option>
                                 <option value="45">TURKISH AIRLINE ISB-MAN</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
 <div class="row justify-content-center mb-2">
     <div class="col-md-6">
@@ -434,6 +437,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const bankLink = document.getElementById('bankLink');
         myBookingsLink.href = `/client/myBooking?userId=${userId}`;
         bankLink.href = `/client/bank?userId=${userId}`;
+        clientLedger.href=`/client/Ledger?userId=${userId}`;
         
         // Fetch the username from the server
         fetch(`/api/username?userId=${userId}`)

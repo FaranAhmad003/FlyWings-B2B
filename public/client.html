@@ -126,9 +126,9 @@
     <ul class="navbar-nav ml-auto">
         <!-- Authentication Links -->
 <li class="nav-item dropdown">
-    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/login" role="button" aria-expanded="false" v-pre>
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="/logout" role="button" aria-expanded="false" v-pre>
         <span id="usernameDisplay"></span> <!-- Username display element -->
-        <img src="/assets/logout.png" alt="Logout" style="width: 20px; height: 20px;">
+        <img src="/assets/logout.png" style="width: 20px; height: 20px;">
     </a>
 </li>
 
@@ -169,7 +169,7 @@
 										</select>
 									</div>
 									<div data-v-62498c33="" class="col"><label data-v-62498c33="" for="dept_date">Dept Date</label> <input data-v-62498c33="" type="date" id="dept_date" class="form-control"></div>
-									<div data-v-62498c33="" class="col">
+									<!-- <div data-v-62498c33="" class="col">
 										<label data-v-62498c33="" for="sector">Sector</label> 
 										<select data-v-62498c33="" id="sector" class="form-control v-select">
 											<option data-v-62498c33="" value="0">All Sectors</option>
@@ -216,7 +216,7 @@
 											<option data-v-62498c33="" value="SHARJA TO ISLAMABAD">SHARJA TO ISLAMABAD</option>
 											<option data-v-62498c33="" value="SIALKOT TO SHARJA">SIALKOT TO SHARJA</option>
 										</select>
-									</div>
+									</div> -->
 									<div data-v-62498c33="" class="col"><button data-v-62498c33="" class="btn btn-outline-info btn-block" style="margin-top: 32px;">Search
 										</button>
 									</div>
@@ -886,12 +886,14 @@ $(document).ready(function(){
                                 <tr data-v-62498c33="">
                                     <th data-v-62498c33="" colspan="6" style="text-align: center;">
                                         <img data-v-62498c33="" src="${airlineImages[airline]}" alt="${airline}" style="width: 150px; vertical-align: middle;"> 
-                                        <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" class="fa fa-plane"></i></span> 
-                                        <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;">${ticket.from_location} TO ${ticket.to_location}</span>
+                                        <span data-v-62498c33="" style="margin: 0px 5%; vertical-align: middle;"><i data-v-62498c33="" ></i></span> 
+                                        <span data-v-62498c33="" style="font-size: 16px; vertical-align: middle;"></span>
                                     </th>
                                 </tr>
                                 <tr data-v-62498c33="" class="thead-dark">
                                     <th data-v-62498c33="" scope="col">DATE</th>
+									<th data-v-62498c33="" scope="col">From</th>
+									<th data-v-62498c33="" scope="col">TO</th>
                                     <th data-v-62498c33="" scope="col">No of Tickets</th>
                                     <th data-v-62498c33="" scope="col">PNR</th>
                                     <th data-v-62498c33="" scope="col">BAG</th>
@@ -913,6 +915,8 @@ $(document).ready(function(){
                             row.innerHTML = `
                                 <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(255, 195, 0); color: white;">
                                     <td style="color: black;">${formattedDate}</td>
+									<td style="color: black;">${ticket.fromLocation}</td>
+									<td style="color: black;">${ticket.toLocation}</td>
                                     <td style="color: black;">${ticket.no_of_tickets}</td>
                                     <td style="color: black;">${ticket.pnr}</td>
                                     <td style="color: black;">${ticket.luggage_capacity} KG</td>

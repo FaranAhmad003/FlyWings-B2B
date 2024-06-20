@@ -2,7 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Passenger</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .form-group > div {
+            flex: 1 1 calc(50% - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .form-group > div {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
     <script>
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -61,37 +136,39 @@
     </script>
 </head>
 <body>
-    <h1>Edit Passenger</h1>
-    <div class="form-group row">
-        <div class="col-md-2">
-            <label for="surname" class="control-label">Surname</label>
-            <input type="text" id="surname" placeholder="e.g. M Arshad" class="form-control">
+    <div class="container">
+        <h1>Edit Passenger</h1>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <label for="surname" class="control-label">Surname</label>
+                <input type="text" id="surname" placeholder="e.g. M Arshad" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="given_name" class="control-label">Given Name</label>
+                <input type="text" id="given_name" placeholder="e.g. Ghafoor" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="title" class="control-label">Title</label>
+                <select id="title" class="form-control">
+                    <option value="MR">MR.</option>
+                    <option value="MRS">MRS.</option>
+                    <option value="MS">MS.</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="passport" class="control-label">Passport #</label>
+                <input type="text" id="passport" maxlength="50" size="50" placeholder="e.g. FP1417751" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="dob" class="control-label">DOB (Birth)</label>
+                <input type="date" id="dob" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="doe" class="control-label">DOE (Expiry)</label>
+                <input type="date" id="doe" class="form-control">
+            </div>
         </div>
-        <div class="col-md-2">
-            <label for="given_name" class="control-label">Given Name</label>
-            <input type="text" id="given_name" placeholder="e.g. Ghafoor" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label for="title" class="control-label">Title</label>
-            <select id="title" class="form-control">
-                <option value="MR">MR.</option>
-                <option value="MRS">MRS.</option>
-                <option value="MS">MS.</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label for="passport" class="control-label">Passport #</label>
-            <input type="text" id="passport" maxlength="50" size="50" placeholder="e.g. FP1417751" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label for="dob" class="control-label">DOB (Birth)</label>
-            <input type="date" id="dob" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label for="doe" class="control-label">DOE (Expiry)</label>
-            <input type="date" id="doe" class="form-control">
-        </div>
+        <button type="button" onclick="updatePassengerData()">Update</button>
     </div>
-    <button type="button" onclick="updatePassengerData()">Update</button>
 </body>
 </html>
