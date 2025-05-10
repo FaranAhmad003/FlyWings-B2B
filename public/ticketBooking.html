@@ -163,6 +163,37 @@
                            </div>
                            <hr>
                            <div id="passenger_details"></div>
+                           <div class="form-group row">
+                               <div class="col-md-6">
+                                   <label for="promo_code" class="control-label">Promo Code</label>
+                                   <div class="input-group">
+                                       <input type="text" id="promo_code" class="form-control" placeholder="Enter promo code">
+                                       <div class="input-group-append">
+                                           <button type="button" id="apply_promo" class="btn btn-outline-primary">Apply</button>
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="col-md-6">
+                                   <div class="price-details">
+                                       <div class="row">
+                                           <div class="col-md-6">
+                                               <label class="control-label">Base Price:</label>
+                                               <span id="base_price">0</span>
+                                           </div>
+                                           <div class="col-md-6">
+                                               <label class="control-label">Discount:</label>
+                                               <span id="discount_amount">0</span>
+                                           </div>
+                                       </div>
+                                       <div class="row mt-2">
+                                           <div class="col-md-12">
+                                               <label class="control-label"><strong>Total Price:</strong></label>
+                                               <span id="total_price" class="text-success font-weight-bold">0</span>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
                            <div id="booking_confirm" style="display: none;">
                               <div class="form-group"><button type="submit" class="btn btn-success pull-right"
                                     id="submitBtn">Book Now</button></div>
@@ -629,6 +660,72 @@
       var userId = document.getElementById('userId').innerText;
 
       window.location.href = 'myBooking.html?userId=' + userId;
+   });
+
+   // Promo code functionality
+   let basePrice = 0;
+   let discountAmount = 0;
+   let baseFare = 0;
+
+   // Function to calculate total price based on passengers
+   function calculateTotalPrice() {
+      const adults = parseInt(document.getElementById('adults').value) || 0;
+      const children = parseInt(document.getElementById('child').value) || 0;
+      const infants = parseInt(document.getElementById('infant').value) || 0;
+      const totalPassengers = adults + children + infants;
+      basePrice = baseFare * totalPassengers;
+      updatePriceDisplay();
+   }
+
+   // Function to update price display
+   function updatePriceDisplay() {
+      document.getElementById('base_price').textContent = basePrice.toFixed(2);
+      document.getElementById('discount_amount').textContent = discountAmount.toFixed(2);
+      document.getElementById('total_price').textContent = (basePrice - discountAmount).toFixed(2);
+   }
+
+   // Set initial base price when ticket data is loaded
+   fetch(`/tickets/${ticket_id}`)
+      .then(response => response.json())
+      .then(ticket => {
+         baseFare = parseFloat(ticket.fare) || 0;
+         calculateTotalPrice();
+      });
+
+   // Add event listeners for passenger count changes
+   document.getElementById('adults').addEventListener('change', calculateTotalPrice);
+   document.getElementById('child').addEventListener('change', calculateTotalPrice);
+   document.getElementById('infant').addEventListener('change', calculateTotalPrice);
+
+   // Handle promo code application
+   document.getElementById('apply_promo').addEventListener('click', function() {
+      const promoCode = document.getElementById('promo_code').value;
+      
+      // Make API call to validate promo code
+      fetch('/validate-promo', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            promo_code: promoCode,
+            base_price: basePrice
+         })
+      })
+      .then(response => response.json())
+      .then(data => {
+         if (data.success) {
+            discountAmount = data.discount_amount;
+            updatePriceDisplay();
+            alert('Promo code applied successfully!');
+         } else {
+            alert(data.message || 'Invalid promo code');
+         }
+      })
+      .catch(error => {
+         console.error('Error:', error);
+         alert('Error applying promo code');
+      });
    });
 </script>
 

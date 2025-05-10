@@ -16,6 +16,7 @@ const nodemailer = require("nodemailer");
 require("html");
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.static(__dirname));
 const crypto = require("crypto");
@@ -41,7 +42,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "12345678",
-  database: "Flywings",
+  database: "flywings",
 });
 const transporter = nodemailer.createTransport({
   service: "Gmail", // Use your email service
@@ -112,6 +113,9 @@ app.get('/logout', (req, res) => {
 app.get("/signup", (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
+app.get("/admin/promo", (req, res) => {
+  res.sendFile(__dirname + "/public/adminPromo.html");
+});
 app.get("/admin/ledger", requireAdmin, (req, res) => {
   res.sendFile(__dirname + "/public/ledger.html");
 });
@@ -131,7 +135,7 @@ app.get("/printTable", (req, res) => {
 app.get("/signupSuccess", (req, res) => {
   res.sendFile(__dirname + "/public/signupSuccess.html");
 });
-app.get("/client/Ledger", requireLogin, (req, res) => {
+app.get("/client/Ledger", requireLogin, (rexq, res) => {
   res.sendFile(__dirname + "/public/clientLedger.html");
 });
 // Handle signup POST request
@@ -405,18 +409,42 @@ app.get("/admin/tickets", requireLogin, (req, res) => {
   });
 });
 function savePassengers(passengers, callback) {
-  // Start a transaction
   connection.beginTransaction((err) => {
     if (err) {
       callback(err);
       return;
     }
 
-    // Loop over the passengers and insert each one into the database
     for (const passenger of passengers) {
-      connection.query("INSERT INTO passengers SET ?", passenger, (err) => {
+      // Remove PNR if it exists (not in table)
+      const {
+        surname,
+        given_name,
+        title,
+        passport_number,
+        dob,
+        doe,
+        user_id,
+        ticket_id,
+        passenger_type,
+        status, // optional
+      } = passenger;
+
+      const passengerData = {
+        surname,
+        given_name,
+        title,
+        passport_number,
+        dob,
+        doe,
+        user_id,
+        ticket_id,
+        passenger_type,
+        ...(status && { status }), // Only if status is defined
+      };
+
+      connection.query("INSERT INTO passengers SET ?", passengerData, (err) => {
         if (err) {
-          // If an error occurred, rollback the transaction
           connection.rollback(() => {
             callback(err);
           });
@@ -424,6 +452,8 @@ function savePassengers(passengers, callback) {
         }
       });
     }
+
+    // Reduce ticket count
     const query =
       "UPDATE tickets SET no_of_tickets = no_of_tickets - ? WHERE id = ?";
     connection.query(
@@ -431,7 +461,6 @@ function savePassengers(passengers, callback) {
       [passengers.length, passengers[0].ticket_id],
       (err, results) => {
         if (err) {
-          // If an error occurred, rollback the transaction
           connection.rollback(() => {
             callback(err);
           });
@@ -439,10 +468,9 @@ function savePassengers(passengers, callback) {
         }
       }
     );
-    // If no errors occurred, commit the transaction
+
     connection.commit((err) => {
       if (err) {
-        // If an error occurred, rollback the transaction
         connection.rollback(() => {
           callback(err);
         });
@@ -453,6 +481,7 @@ function savePassengers(passengers, callback) {
     });
   });
 }
+
 app.get("/get_passenger", (req, res) => {
   const id = getUserId();
   connection.query(
