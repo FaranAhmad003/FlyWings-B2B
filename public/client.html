@@ -851,8 +851,11 @@ $(document).ready(function(){
 <script>
         const urlParams = new URLSearchParams(window.location.search);
         const group = urlParams.get('group');
+        const userId = urlParams.get('userId');
         const socket = io();
         console.log('group:', group); 
+        console.log('userId:', userId); // Add logging to verify userId
+
         fetch(`/tickets?group=${group}`)
         .then(response => response.json())
         .then(data => {
@@ -907,7 +910,7 @@ $(document).ready(function(){
                         if(ticket.airline == airline){
                             const date = new Date(ticket.date_of_ticket);
                             const day = String(date.getDate()).padStart(2, '0');
-                            const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
                             const year = date.getFullYear();
                             const formattedDate = `${day}-${month}-${year}`;
                             const row = document.createElement('tbody');
@@ -915,14 +918,14 @@ $(document).ready(function(){
                             row.innerHTML = `
                                 <tr data-v-62498c33="" id=${ticket.id} style="background: rgb(255, 195, 0); color: white;">
                                     <td style="color: black;">${formattedDate}</td>
-									<td style="color: black;">${ticket.fromLocation}</td>
-									<td style="color: black;">${ticket.toLocation}</td>
+                                    <td style="color: black;">${ticket.fromLocation}</td>
+                                    <td style="color: black;">${ticket.toLocation}</td>
                                     <td style="color: black;">${ticket.no_of_tickets}</td>
                                     <td style="color: black;">${ticket.pnr}</td>
                                     <td style="color: black;">${ticket.luggage_capacity} KG</td>
                                     <td><span style="color: black;"><b>${ticket.meal}</b></span></td>
                                     <td style="color: black;"><b>${ticket.fare} PKR/-</b></td>
-                                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block" style="background-color: rgb(255, 87, 51); border-color: rgb(255, 87, 51); color: black;"><b>SELECT</b></a></td>
+                                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}&userId=${userId}" class="btn btn-outline-warning btn-sm btn-block" style="background-color: rgb(255, 87, 51); border-color: rgb(255, 87, 51); color: black;"><b>SELECT</b></a></td>
                                 </tr>
                             `;
                             container.appendChild(row);
@@ -998,7 +1001,7 @@ $(document).ready(function(){
                     <td>${ticket.luggage_capacity} KG</td>
                     <td><span style="color: red;"><b>${ticket.meal}</b></span></td>
                     <td><b>${ticket.fare} PKR/-</b></td>
-                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
+                    <td><a href="/public/ticketBooking.html?ticketId=${ticket.id}&userId=${userId}" class="btn btn-outline-warning btn-sm btn-block"><b>SELECT</b></a></td>
                 </tr>
             `;
             container.appendChild(row);

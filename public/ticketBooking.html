@@ -490,6 +490,18 @@
 <script>
    const urlParams = new URLSearchParams(window.location.search);
    const ticket_id = urlParams.get('ticketId');
+   const user_id = urlParams.get('userId'); 
+   console.log('user_id:', user_id);
+
+   // Store user_id in a hidden input for later use
+   document.addEventListener('DOMContentLoaded', function() {
+      const userIdInput = document.createElement('input');
+      userIdInput.type = 'hidden';
+      userIdInput.id = 'userId';
+      userIdInput.value = user_id;
+      document.body.appendChild(userIdInput);
+   });
+
    fetch(`/tickets/${ticket_id}`)
       .then(response => {
          if (!response.ok) {
@@ -537,7 +549,10 @@
                 </tr>
             `;
          container.appendChild(row);
-         document.getElementById('agency_name').value = ticket.first_name;
+         if (document.getElementById('agency_name')) {
+  document.getElementById('agency_name').value = ticket.first_name;
+}
+
          document.getElementById('email').value = ticket.email;
          document.getElementById('mobile').value = ticket.mobile;
       })
@@ -606,9 +621,14 @@
          e.preventDefault();
          var passengers = [];
          var ticketId = document.getElementById('ticketId').innerText;
-         var userId = document.getElementById('userId').innerText;
+         var userId = user_id; // Use the user_id from URL parameters directly
          var pnr_no = document.getElementById('tickPnr').innerText;
-         //console.log(pnr_no);
+
+         if (!userId || userId === 'null') {
+            alert('Error: User ID is missing. Please try logging in again.');
+            return;
+         }
+
          $("#passenger_details .form-group.row").each(function () {
             var passengerType = $(this).data('passenger-type');
             var passenger = {
@@ -618,14 +638,27 @@
                passport_number: $(this).find("input[id^='passport']").val(),
                dob: $(this).find("input[id^='dob']").val(),
                doe: $(this).find("input[id^='doe']").val(),
-               // Assuming user_id and ticket_id are somewhere in the form
-               user_id: userId,
-               ticket_id: ticketId,
+               user_id: parseInt(userId), // Convert to integer
+               ticket_id: parseInt(ticketId), // Convert to integer
                passenger_type: passengerType,
                pnr: pnr_no
             };
             passengers.push(passenger);
          });
+
+         // Validate required fields
+         var isValid = true;
+         passengers.forEach(function(passenger) {
+            if (!passenger.surname || !passenger.given_name || !passenger.passport_number || 
+                !passenger.dob || !passenger.doe) {
+               isValid = false;
+            }
+         });
+
+         if (!isValid) {
+            alert('Please fill in all required fields for all passengers.');
+            return;
+         }
 
          $.ajax({
             url: '/save_passenger',
@@ -634,38 +667,33 @@
             contentType: 'application/json',
             success: function (response) {
                if (response.success) {
-                  // Get the current date and time
                   var now = new Date();
-                  // Add 3 hours to it
                   now.setHours(now.getHours() + 3);
-                  // Format the date and time
                   var deadline = now.toLocaleString();
-                  // Set the text of the #confirmDeadline element
                   $("#confirmDeadline").text(deadline);
-                  // Display the confirmation modal
                   $("#confirmationModal").modal('show');
-                  // Set the display property to flex
                   $("#confirmationModal").css('display', 'flex');
                } else {
-                  alert("Error saving data");
+                  alert(response.message || "Error saving data");
                }
             },
-            error: function () {
-               alert("Error sending data");
+            error: function (xhr, status, error) {
+               console.error('Error:', error);
+               alert("Error sending data: " + error);
             }
          });
       });
    });
    $("#redirectButton").click(function () {
-      var userId = document.getElementById('userId').innerText;
-
-      window.location.href = 'myBooking.html?userId=' + userId;
+      // Use the user_id from URL parameters instead of innerText
+      window.location.href = `/client/myBooking?userId=${user_id}`;
    });
 
    // Promo code functionality
    let basePrice = 0;
    let discountAmount = 0;
    let baseFare = 0;
+   let appliedPromoCode = null;
 
    // Function to calculate total price based on passengers
    function calculateTotalPrice() {
@@ -701,7 +729,11 @@
    document.getElementById('apply_promo').addEventListener('click', function() {
       const promoCode = document.getElementById('promo_code').value;
       
-      // Make API call to validate promo code
+      if (!promoCode) {
+         alert('Please enter a promo code');
+         return;
+      }
+
       fetch('/validate-promo', {
          method: 'POST',
          headers: {
@@ -716,16 +748,29 @@
       .then(data => {
          if (data.success) {
             discountAmount = data.discount_amount;
+            appliedPromoCode = promoCode;
             updatePriceDisplay();
             alert('Promo code applied successfully!');
          } else {
             alert(data.message || 'Invalid promo code');
+            discountAmount = 0;
+            appliedPromoCode = null;
+            updatePriceDisplay();
          }
       })
       .catch(error => {
          console.error('Error:', error);
          alert('Error applying promo code');
       });
+   });
+
+   // Add event listener for promo code input to clear discount when code is changed
+   document.getElementById('promo_code').addEventListener('input', function() {
+      if (this.value !== appliedPromoCode) {
+         discountAmount = 0;
+         appliedPromoCode = null;
+         updatePriceDisplay();
+      }
    });
 </script>
 

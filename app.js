@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql2");
 const speakeasy = require("speakeasy");
 const session = require("express-session");
-const { exec } = require("child_process");
 const app = express();
 const port = 3000;
 const { setUsername, getUsername } = require("./userdata");
@@ -17,11 +16,13 @@ require("html");
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(express.static(__dirname));
 const crypto = require("crypto");
 const secret = crypto.randomBytes(64).toString("hex");
-const adminsecret=crypto.randomBytes(64).toString("hex");
+const adminsecret = crypto.randomBytes(64).toString("hex");
 console.log(secret);
 app.use(
   session({
@@ -93,20 +94,19 @@ function requireClient(req, res, next) {
   }
 }
 
-
 // Serve the HTML page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
 //logout
 // Logout route
-app.get('/logout', (req, res) => {
-  req.session.destroy(err => {
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
     if (err) {
-      console.error('Error destroying session:', err);
-      return res.status(500).send('Failed to log out.');
+      console.error("Error destroying session:", err);
+      return res.status(500).send("Failed to log out.");
     }
-    res.redirect('/'); // Redirect to login page after logout
+    res.redirect("/"); // Redirect to login page after logout
   });
 });
 
@@ -283,7 +283,7 @@ function isPasswordComplex(password) {
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
-app.get("/client",requireClient,(req, res) => {
+app.get("/client", requireClient, (req, res) => {
   const userId = req.session.userId;
   const filePath = path.join(__dirname, "public", "client_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
@@ -306,7 +306,7 @@ app.get("/client/bank", requireLogin, (req, res) => {
     res.send(html);
   });
 });
-app.get("/admin/bank",requireLogin, (req, res) => {
+app.get("/admin/bank", requireLogin, (req, res) => {
   const filePath = path.join(__dirname, "public", "bank.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -317,7 +317,7 @@ app.get("/admin/bank",requireLogin, (req, res) => {
   });
 });
 
-app.get("/admin",requireAdmin, (req, res) => {
+app.get("/admin", requireAdmin, (req, res) => {
   const filePath = path.join(__dirname, "public", "admin_home_page.html");
   fs.readFile(filePath, "utf8", (err, html) => {
     if (err) {
@@ -409,76 +409,81 @@ app.get("/admin/tickets", requireLogin, (req, res) => {
   });
 });
 function savePassengers(passengers, callback) {
+  if (!Array.isArray(passengers) || passengers.length === 0) {
+    return callback(new Error("Invalid passengers data"));
+  }
+
   connection.beginTransaction((err) => {
     if (err) {
-      callback(err);
-      return;
+      return callback(err);
     }
 
+    let completedQueries = 0;
+    let hasError = false;
+
     for (const passenger of passengers) {
-      // Remove PNR if it exists (not in table)
-      const {
-        surname,
-        given_name,
-        title,
-        passport_number,
-        dob,
-        doe,
-        user_id,
-        ticket_id,
-        passenger_type,
-        status, // optional
-      } = passenger;
+      // Validate required fields
+      if (!passenger.user_id || !passenger.ticket_id) {
+        return connection.rollback(() => {
+          callback(new Error("Missing required fields: user_id or ticket_id"));
+        });
+      }
 
       const passengerData = {
-        surname,
-        given_name,
-        title,
-        passport_number,
-        dob,
-        doe,
-        user_id,
-        ticket_id,
-        passenger_type,
-        ...(status && { status }), // Only if status is defined
+        surname: passenger.surname,
+        given_name: passenger.given_name,
+        title: passenger.title,
+        passport_number: passenger.passport_number,
+        dob: passenger.dob,
+        doe: passenger.doe,
+        user_id: parseInt(passenger.user_id),
+        ticket_id: parseInt(passenger.ticket_id),
+        passenger_type: passenger.passenger_type,
+        pnr: passenger.pnr,
+        promo_code: passenger.promo_code,
+        discount_amount: passenger.discount_amount,
       };
 
       connection.query("INSERT INTO passengers SET ?", passengerData, (err) => {
+        completedQueries++;
+
         if (err) {
+          hasError = true;
           connection.rollback(() => {
             callback(err);
           });
           return;
+        }
+
+        if (completedQueries === passengers.length && !hasError) {
+          // Reduce ticket count
+          const query =
+            "UPDATE tickets SET no_of_tickets = no_of_tickets - ? WHERE id = ?";
+          connection.query(
+            query,
+            [passengers.length, passengers[0].ticket_id],
+            (err) => {
+              if (err) {
+                connection.rollback(() => {
+                  callback(err);
+                });
+                return;
+              }
+
+              connection.commit((err) => {
+                if (err) {
+                  connection.rollback(() => {
+                    callback(err);
+                  });
+                  return;
+                }
+                callback(null);
+              });
+            }
+          );
         }
       });
     }
-
-    // Reduce ticket count
-    const query =
-      "UPDATE tickets SET no_of_tickets = no_of_tickets - ? WHERE id = ?";
-    connection.query(
-      query,
-      [passengers.length, passengers[0].ticket_id],
-      (err, results) => {
-        if (err) {
-          connection.rollback(() => {
-            callback(err);
-          });
-          return;
-        }
-      }
-    );
-
-    connection.commit((err) => {
-      if (err) {
-        connection.rollback(() => {
-          callback(err);
-        });
-        return;
-      }
-
-      callback(null);
-    });
   });
 }
 
@@ -713,14 +718,26 @@ app.post("/reject_passenger", (req, res) => {
 app.post("/save_passenger", (req, res) => {
   const passengers = req.body.passengers;
 
-  // Assuming you have a function to save passengers
+  if (!Array.isArray(passengers) || passengers.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid passenger data",
+    });
+  }
+
   savePassengers(passengers, (err) => {
     if (err) {
       console.error("Error saving passengers:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    } else {
-      res.json({ success: true });
+      return res.status(500).json({
+        success: false,
+        message: err.message || "Error saving passenger data",
+      });
     }
+
+    res.json({
+      success: true,
+      message: "Passengers saved successfully",
+    });
   });
 });
 app.post("/cancel_passengers", (req, res) => {
@@ -885,7 +902,6 @@ app.post("/login", (req, res) => {
     }
   );
 });
-
 
 //=============admin side functionallity to handle here
 
@@ -1316,8 +1332,180 @@ app.delete("/api/deleteTicket", (req, res) => {
     }
   );
 });
+app.post("/admin/addPromoCode", (req, res) => {
+  // Optional: log the incoming data for debugging
+  console.log("Received promo data:", req.body);
 
-// Start the server
+  // Use safe fallbacks and sanitization
+  const code = (req.body.code || "").trim().toUpperCase();
+  const description = (req.body.description || "").trim();
+  const discount_type = (req.body.discount_type || "flat").trim().toLowerCase();
+  const discount_value = parseFloat(req.body.discount_value || 0);
+  const usage_limit = req.body.usage_limit
+    ? parseInt(req.body.usage_limit)
+    : null;
+  const valid_from = req.body.valid_from || null;
+  const valid_to = req.body.valid_to || null;
+  const from_location = req.body.from_location
+    ? req.body.from_location.trim()
+    : null;
+  const to_location = req.body.to_location ? req.body.to_location.trim() : null;
+
+  const query = `
+    INSERT INTO promo_codes 
+    (code, description, discount_type, discount_value, usage_limit, valid_from, valid_to, from_location, to_location)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  connection.query(
+    query,
+    [
+      code,
+      description,
+      discount_type,
+      discount_value,
+      usage_limit,
+      valid_from,
+      valid_to,
+      from_location,
+      to_location,
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Error inserting promo code:", err);
+        return res.status(500).send("Internal Server Error");
+      }
+
+      res.send(`
+        <script>
+          alert('Promo Code Added Successfully!');
+          window.location.href = '/admin/promo';
+        </script>
+      `);
+    }
+  );
+});
+// Validate promo code
+app.post("/validate-promo", (req, res) => {
+  const { promo_code, base_price } = req.body;
+
+  if (!promo_code || !base_price) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing promo code or price.",
+    });
+  }
+
+  // Start transaction
+  connection.beginTransaction((err) => {
+    if (err) {
+      console.error("Transaction error:", err);
+      return res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+
+    // Check if promo code exists and is valid
+    const query = `
+      SELECT * FROM promo_codes 
+      WHERE code = ? 
+      AND valid_from <= CURDATE() 
+      AND valid_to >= CURDATE()
+      AND (usage_limit IS NULL OR usage_count < usage_limit)
+      FOR UPDATE`;
+
+    connection.query(query, [promo_code.toUpperCase()], (err, results) => {
+      if (err) {
+        return connection.rollback(() => {
+          console.error("Promo code lookup error:", err);
+          res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+        });
+      }
+
+      if (!results || results.length === 0) {
+        return connection.rollback(() => {
+          res.status(400).json({
+            success: false,
+            message: "Invalid or expired promo code",
+          });
+        });
+      }
+
+      const promo = results[0];
+      let discount_amount = 0;
+
+      // Calculate discount based on type
+      if (promo.discount_type === "flat") {
+        discount_amount = parseFloat(promo.discount_value);
+      } else if (promo.discount_type === "percentage") {
+        discount_amount =
+          (parseFloat(base_price) * parseFloat(promo.discount_value)) / 100;
+      }
+
+      // Update usage count if there's a limit
+      if (promo.usage_limit) {
+        connection.query(
+          "UPDATE promo_codes SET usage_count = usage_count + 1 WHERE id = ?",
+          [promo.id],
+          (err, updateResult) => {
+            if (err) {
+              return connection.rollback(() => {
+                console.error("Error updating usage count:", err);
+                res.status(500).json({
+                  success: false,
+                  message: "Server error",
+                });
+              });
+            }
+
+            // Commit transaction
+            connection.commit((err) => {
+              if (err) {
+                return connection.rollback(() => {
+                  console.error("Error committing transaction:", err);
+                  res.status(500).json({
+                    success: false,
+                    message: "Server error",
+                  });
+                });
+              }
+
+              res.json({
+                success: true,
+                discount_amount,
+                message: "Promo code applied successfully!",
+              });
+            });
+          }
+        );
+      } else {
+        // If no usage limit, just commit the transaction
+        connection.commit((err) => {
+          if (err) {
+            return connection.rollback(() => {
+              console.error("Error committing transaction:", err);
+              res.status(500).json({
+                success: false,
+                message: "Server error",
+              });
+            });
+          }
+
+          res.json({
+            success: true,
+            discount_amount,
+            message: "Promo code applied successfully!",
+          });
+        });
+      }
+    });
+  });
+});
+
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
